@@ -16,7 +16,7 @@
 
     "forceConsistentCasingInFileNames": true, // Tránh lỗi sai hoa/thường khi import (Linux hay dính)
 
-    "types": ["node"],                  // Dùng type definition của Node.js (process, __dirname...)
+    "types": ["node"],                  // Nhận diện đúng kiểu dữ liệu của các API Node.js như process.env, fs.readFile,...
 
     "noUnusedLocals": true,              // Báo lỗi nếu khai báo biến mà không dùng
     "noUnusedParameters": true           // Báo lỗi nếu hàm có param không dùng
