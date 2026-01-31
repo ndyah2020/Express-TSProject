@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",                 // Thư mục chứa file JS sau khi build
+    "rootDir": "./src",                 // Thư mục chứa code TypeScript gốc
+
+    "target": "ES2020",                 // Chuẩn JavaScript đầu ra (phù hợp Node 16+)
+    "module": "commonjs",               // Hệ module dùng cho Node.js
+
+    "esModuleInterop": true,            // Cho phép import thư viện CommonJS bằng cú pháp ES
+    "skipLibCheck": true,               // Bỏ qua check type trong node_modules (build nhanh hơn)
+    "incremental": true,                // Build tăng dần, chỉ compile file thay đổi
+
+    "strict": true,                     // Bật toàn bộ các rule strict (rất quan trọng)
+    "noImplicitAny": true,              // Báo lỗi nếu biến/param không có kiểu (any ngầm)
+    "strictNullChecks": true,           // Ép check null & undefined rõ ràng
+
+    "forceConsistentCasingInFileNames": true, // Tránh lỗi sai hoa/thường khi import (Linux hay dính)
+
+    "types": ["node"],                  // Dùng type definition của Node.js (process, __dirname...)
+
+    "noUnusedLocals": true,              // Báo lỗi nếu khai báo biến mà không dùng
+    "noUnusedParameters": true           // Báo lỗi nếu hàm có param không dùng
+  },
+
+  "include": ["src/**/*"],               // Chỉ compile file trong thư mục src
+  "exclude": ["node_modules", "dist"]    // Không compile các thư mục này
+}

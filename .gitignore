@@ -1,0 +1,15 @@
+# Dependencies
+node_modules
+
+# Build artifacts
+dist
+build
+*.js.map
+*.d.ts
+
+# Environment variables
+.env
+.env.local
+
+# Optional: Editor/IDE specific files
+.vscode
