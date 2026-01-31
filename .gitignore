@@ -13,3 +13,7 @@ build
 
 # Optional: Editor/IDE specific files
 .vscode
+
+#json
+tsconfig.tsbuildinfo
+
