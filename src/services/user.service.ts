@@ -25,13 +25,14 @@ export class UserService {
     }
 
     loginService = async (userBody: UserRequest) => {
+
         const user = await User.findOne({username: userBody.username})
         if(!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid credentials")
 
         const isMatch = await bcrypt.compare(userBody.password, user.passwordHash)
         if(!isMatch) throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid credentials")
         
-        const userPayLoad: UserPayload = {
+        const userPayload: UserPayload = {
             userId: user.id,
             role: user.role,
         }
@@ -40,8 +41,11 @@ export class UserService {
         const refreshSecretKey = process.env.JWT_SECRET_REFRESH
 
         if(!accessSecretKey || !refreshSecretKey) throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "JWT_SECRET is not defined in environment variables")
-        const accessToken = await jwtProviders.generateToken(userPayLoad, accessSecretKey, '1h')
-        const refreshToken = await jwtProviders.generateToken(userPayLoad, refreshSecretKey, '30d')
+        // generate ra 2 token khi gọi chung luôn sẽ chạy nhanh hơn
+        const [accessToken, refreshToken] = await Promise.all([
+            jwtProviders.generateToken(userPayload, accessSecretKey, '1h'),
+            jwtProviders.generateToken(userPayload, refreshSecretKey, '30d')
+        ]);
       
         return {
             userInfor: {
