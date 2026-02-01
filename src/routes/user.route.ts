@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import userController from '../controllers/user.controller';
+import userController from '../controllers/auth.controller';
 const router = Router()
 // chưa có middlewares phần này bổ sung sau
 // api/user/me
-router.get('/register', userController.register)
-
+router.post('/register', userController.register)
+router.post('/login', userController.login)
 export default router;

@@ -4,7 +4,7 @@ import ApiError from '../utils/ApiError';
 import { StatusCodes } from 'http-status-codes';
 
 
-export const generateToken = async (UserPayload : UserPayload , secretKey: string, tokenLife: SignOptions['expiresIn']): Promise<string> =>  {  
+const generateToken = async (UserPayload : UserPayload , secretKey: string, tokenLife: SignOptions['expiresIn']): Promise<string> =>  {  
     //SignOptions['expiresIn']) là 1 TypeScript interface package của jsonwebtoken buộc tokenLife truyền vào phải đúng định dạng là 1h, 2h, 1d do dùng TypeScript truyền vòa với kiểu string | number thì vẫn báo lỗi
     return new Promise((resolve, reject) => {
         jwt.sign(
@@ -23,7 +23,7 @@ export const generateToken = async (UserPayload : UserPayload , secretKey: strin
 }
 
 
-export const verifyToken = async <T>(token: string, secretKey: string): Promise<T> => {
+const verifyToken = async <T>(token: string, secretKey: string): Promise<T> => {
     //vẫn dùng promeise để xử lý callback trả về
     return new Promise((resolve, reject) => {
         jwt.verify(token, secretKey, (error, decoded) => {
@@ -38,3 +38,7 @@ export const verifyToken = async <T>(token: string, secretKey: string): Promise<
     })
 }
 
+export const jwtProviders = {
+    generateToken,
+    verifyToken
+}
