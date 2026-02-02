@@ -15,4 +15,3 @@ export const errorHandler = (err: ApiError, _req: Request, res: Response, _next:
 
     res.status(errorResponse.statusCode).json({errorResponse})
 }
-
