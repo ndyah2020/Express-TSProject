@@ -4,6 +4,8 @@ import User from "../models/user.model"
 import ApiError from "../utils/ApiError"
 import bcrypt from "bcryptjs"
 import { jwtProviders } from "../providers/jwtProviders";
+
+
 export class UserService {
     registerService = async (userBody: UserRequest): Promise<UserResponse> => {
 
@@ -55,6 +57,25 @@ export class UserService {
             accessToken,
             refreshToken,
         };
+    }
+
+    refreshTokenService = async (refreshTokenFromCookies: string) : Promise<string> => {
+        if(!refreshTokenFromCookies) throw new ApiError(StatusCodes.UNAUTHORIZED, "")
+
+        const jwtSecretRefresh = process.env.JWT_SECRET_REFRESH
+        const jwtSecretAccess = process.env.JWT_SECRET_ACCESS
+        if(!jwtSecretRefresh || !jwtSecretAccess) throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "JWT_SECRET is not defined in environment variables")
+
+        const refreshTokenDecoded = await jwtProviders.verifyToken(refreshTokenFromCookies, jwtSecretRefresh) as UserPayload
+        
+        const userPayload = {
+            userId: refreshTokenDecoded.userId,
+            role: refreshTokenDecoded.role
+        }
+       
+        const newAccessToken = await jwtProviders.generateToken(userPayload, jwtSecretAccess, '1h')
+
+        return newAccessToken as string
     }
 }
 
