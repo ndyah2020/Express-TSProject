@@ -19,9 +19,13 @@
     "types": ["node"],                  // Nhận diện đúng kiểu dữ liệu của các API Node.js như process.env, fs.readFile,...
 
     "noUnusedLocals": true,              // Báo lỗi nếu khai báo biến mà không dùng
-    "noUnusedParameters": true           // Báo lỗi nếu hàm có param không dùng
+    "noUnusedParameters": true,          // Báo lỗi nếu hàm có param không dùng
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-
-  "include": ["src/**/*"],               // Chỉ compile file trong thư mục src
-  "exclude": ["node_modules", "dist"]    // Không compile các thư mục này
+  "include": ["src/**/*"],            // Chỉ compile file trong thư mục src
+  "exclude": ["node_modules", "dist"],   // Không compile các thư mục này
+  //chổ này bắt buộc ts-node load các file trong include
+  "ts-node": {
+    "files": true,
+  }
 }
