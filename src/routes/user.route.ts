@@ -4,6 +4,6 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 const router = Router()
 // chưa có middlewares phần này bổ sung sau
 // api/users/list
-router.get('/list', authMiddleware.isAuthorzied ,userController.listUsers)
+router.get('/list', authMiddleware.isAuthorized ,userController.listUsers)
 
 export default router;

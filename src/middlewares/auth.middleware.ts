@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiError"
 import { UserPayload } from "../interfaces/auth.interface"
 import jwt from "jsonwebtoken"
 
-const isAuthorzied = async (req: Request, _res: Response, next: NextFunction) => {
+const isAuthorized = async (req: Request, _res: Response, next: NextFunction) => {
     try {
         const accessTokeFromCookie = req.cookies?.accessToken
         if(!accessTokeFromCookie) throw new ApiError(StatusCodes.UNAUTHORIZED, "unauthorized!(Token not found)")
@@ -27,5 +27,5 @@ const isAuthorzied = async (req: Request, _res: Response, next: NextFunction) =>
 }
 
 export const authMiddleware = {
-    isAuthorzied
+    isAuthorized
 }
