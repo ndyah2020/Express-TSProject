@@ -29,10 +29,10 @@ export class UserService {
     loginService = async (userBody: UserRequest) => {
 
         const user = await User.findOne({username: userBody.username})
-        if(!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid credentials")
+        if(!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Incorrect account or password information")
 
         const isMatch = await bcrypt.compare(userBody.password, user.passwordHash)
-        if(!isMatch) throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid credentials")
+        if(!isMatch) throw new ApiError(StatusCodes.UNAUTHORIZED, "Incorrect account or password information")
         
         const userPayload: UserPayload = {
             userId: user.id,

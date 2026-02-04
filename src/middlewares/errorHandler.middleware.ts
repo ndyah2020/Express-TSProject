@@ -21,7 +21,7 @@ export const errorHandler = (err: unknown, _req: Request, res: Response, _next: 
         stack = err.stack
     }
 
-    // nếu throw ApiError mà không có status code thì mặc định là 500
+    // nếu quăng lỗi không phải từ 2 thằng kia thì sẽ mặc định Interal server error
     const errorResponse = {
         statusCode: statusCode,
         message: message,
