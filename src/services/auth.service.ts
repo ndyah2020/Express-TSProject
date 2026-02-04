@@ -60,7 +60,7 @@ export class UserService {
     }
 
     refreshTokenService = async (refreshTokenFromCookies: string) : Promise<string> => {
-        if(!refreshTokenFromCookies) throw new ApiError(StatusCodes.UNAUTHORIZED, "")
+        if(!refreshTokenFromCookies) throw new ApiError(StatusCodes.UNAUTHORIZED, "Refresh Token not found (please login again)")
 
         const jwtSecretRefresh = process.env.JWT_SECRET_REFRESH
         const jwtSecretAccess = process.env.JWT_SECRET_ACCESS

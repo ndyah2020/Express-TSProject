@@ -1,20 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import {ZodError, ZodType } from 'zod'
-import ApiError from '../utils/ApiError'
-import { StatusCodes } from 'http-status-codes'
-
-
-//hàm này để xử lý error quăng ra 
-const handleZodError = (err: unknown, next: NextFunction) => {
-    if(err instanceof ZodError) {
-        const erroMessage = err.errors.map(e => e.message).join(', ')
-        console.log(erroMessage)
-
-        return next(new ApiError(StatusCodes.BAD_REQUEST, erroMessage))
-    }
-    //bắt lỗi khác nếu không phải từ zod error
-    next()
-}
+import {ZodType } from 'zod'
 
 const validate = (schema: ZodType) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
@@ -26,7 +11,7 @@ const validate = (schema: ZodType) => {
             })
             next()
         } catch (error: unknown) {
-            handleZodError(error, next)
+            next(error)
         }
     }
 }
@@ -38,7 +23,7 @@ const validateBody = (schema: ZodType) => {
             req.body = await schema.parseAsync(req.body)
             next()
         } catch (error: unknown) {
-            handleZodError(error, next)
+            next(error)
         }
     }
 }
@@ -49,7 +34,7 @@ const validateQuery = (schema: ZodType) => {
             req.query = await schema.parseAsync(req.query)
             next()
         } catch (error: unknown) {
-            handleZodError(error, next)
+            next(error)
         }
     }
 }
@@ -60,7 +45,7 @@ const validateParams = (schema: ZodType) => {
             req.params = await schema.parseAsync(req.params)
             next()
         } catch (error: unknown) {           
-           handleZodError(error, next)
+           next(error)
         }
     }
 }
