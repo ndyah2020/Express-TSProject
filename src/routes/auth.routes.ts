@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { validate, validateBody } from '../middlewares'
-import { registerSchema, userBodySchema } from '../middlewares/schemas'
+import { registerSchema, loginBodySchema } from '../validations'
 
 const router = express.Router()
 
@@ -18,7 +18,7 @@ router.post('/register', validate(registerSchema), (req: Request, res: Response)
 })
 
 // Ví dụ 2: Dùng validateBody() chỉ validate body
-router.post('/login', validateBody(userBodySchema), (req: Request, res: Response) => {
+router.post('/login', validateBody(loginBodySchema), (req: Request, res: Response) => {
     const { email } = req.body
     // TODO: Verify password và generate JWT token
     
