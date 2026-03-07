@@ -1,7 +1,5 @@
 // Auth validations
 export {
-    registerSchema,
-    loginSchema,
     registerBodySchema,
     loginBodySchema
 } from './auth.validation'
@@ -9,7 +7,6 @@ export {
 // User validations
 export {
     userIdParamSchema,
-    updateUserSchema,
     getUsersQuerySchema,
     updateUserBodySchema
 } from './user.validation'

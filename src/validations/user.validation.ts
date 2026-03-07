@@ -8,9 +8,10 @@ export const userIdParamSchema = z.object({
 // Schema cho query params (pagination, search)
 export const getUsersQuerySchema = z.object({
     page: z.string().regex(/^\d+$/).transform(Number).default('1'),
-        limit: z.string().regex(/^\d+$/).transform(Number).default('10'),
-        search: z.string().optional()
+    limit: z.string().regex(/^\d+$/).transform(Number).default('10'),
+    search: z.string().optional()
 })
+export type IGetUsersQuery =z.infer<typeof getUsersQuerySchema>
 
 // Schema riêng cho body
 export const updateUserBodySchema = z.object({
@@ -19,3 +20,4 @@ export const updateUserBodySchema = z.object({
     phone: z.string().optional(),
     avatar: z.string().url('Avatar phải là URL hợp lệ').optional()
 })
+export type IUpdateUser = z.infer<typeof updateUserBodySchema>
