@@ -1,13 +1,15 @@
 import { StatusCodes } from "http-status-codes"
-import { UserPayload, UserRequest, UserResponse } from '../interfaces/auth.interface';
+
 import User from "../models/user.model"
 import ApiError from "../utils/ApiError"
 import bcrypt from "bcryptjs"
 import { jwtProviders } from "../providers/jwtProviders";
-
+// interface
+import { IUserInfor } from "../validations/auth.validation";
+import { UserPayload, UserResponse } from '../interfaces/auth.interface';
 
 export class UserService {
-    registerService = async (userBody: UserRequest): Promise<UserResponse> => {
+    registerService = async (userBody: IUserInfor): Promise<UserResponse> => {
 
         const userExits = await User.findOne({username: userBody.username})
         if(userExits) throw new ApiError(StatusCodes.CONFLICT, "This username already in use")
@@ -26,7 +28,7 @@ export class UserService {
         };
     }
 
-    loginService = async (userBody: UserRequest) => {
+    loginService = async (userBody: IUserInfor) => {
 
         const user = await User.findOne({username: userBody.username})
         if(!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Incorrect account or password information")

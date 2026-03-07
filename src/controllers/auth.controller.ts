@@ -1,13 +1,14 @@
 import { Response, Request, NextFunction } from "express"
 import { StatusCodes } from "http-status-codes"
 import  authService from "../services/auth.service"
-import { UserRequest } from "../interfaces/auth.interface"
+import { IUserInfor } from "../validations/auth.validation"
+
 
 
 export class AuthController {
     register = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { username, password } = req.body as UserRequest
+            const { username, password } = req.body as IUserInfor
             //phần kiểm tra dữ liệu từ body sẽ được viết validate sau
             const result = await authService.registerService({username, password})
 
@@ -20,7 +21,7 @@ export class AuthController {
 
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {username, password} = req.body as UserRequest
+            const {username, password} = req.body as IUserInfor
             const result = await authService.loginService({username, password})
 
             res.cookie(

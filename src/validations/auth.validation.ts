@@ -8,7 +8,7 @@ export const registerBodySchema = z.object({
     password: z.string().min(6, 'Password phải có ít nhất 6 ký tự'),
 })
 //trả về luôn interface sau này kh phải khai báo interface
-export type RegisterBody = z.infer<typeof registerBodySchema>
+export type IUserInfor = z.infer<typeof registerBodySchema>
 
 // Schema cho register
 export const registerSchema = z.object({
