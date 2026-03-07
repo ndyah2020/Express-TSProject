@@ -3,7 +3,6 @@ import authController from '../controllers/auth.controller';
 import { validateMiddleware } from '../middlewares/validate.middleware.'
 import { loginBodySchema, registerBodySchema } from '../validations/auth.validation';
 const router = Router()
-// chưa có middlewares phần này bổ sung sau
 
 // api/auth/register
 router.post('/register', validateMiddleware.validateBody(registerBodySchema) ,authController.register)

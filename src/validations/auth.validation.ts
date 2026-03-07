@@ -10,21 +10,9 @@ export const registerBodySchema = z.object({
 //trả về luôn interface sau này kh phải khai báo interface
 export type IUserInfor = z.infer<typeof registerBodySchema>
 
-// Schema cho register
-export const registerSchema = z.object({
-    body: registerBodySchema
-})
-
 
 export const loginBodySchema = z.object({
     username: z.string().min(1, "Username không được bỏ trống"),
     password: z.string().min(1, 'Password không được để trống')
 })
-
 export type LoginBody = z.infer<typeof loginBodySchema>
-
-
-// Schema cho login
-export const loginSchema = z.object({
-    body: loginBodySchema
-})

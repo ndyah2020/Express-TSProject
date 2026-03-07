@@ -1,21 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import {ZodType } from 'zod'
 
-const validate = (schema: ZodType) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
-        try {
-            await schema.parseAsync({
-                body: req.body,
-                query: req.query,
-                params: req.params
-            })
-            next()
-        } catch (error: unknown) {
-            next(error)
-        }
-    }
-}
-
 // Middleware cho từng loại riêng
 const validateBody = (schema: ZodType) => {
     return async (req: Request, _res: Response, next: NextFunction) => {
@@ -51,7 +36,6 @@ const validateParams = (schema: ZodType) => {
 }
 
 export const validateMiddleware = {
-    validate,
     validateBody,
     validateQuery,
     validateParams
