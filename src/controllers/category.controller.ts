@@ -9,7 +9,7 @@ export class ProductController {
 
             res.status(StatusCodes.OK).json(result)
         }catch (error) {
-            next()
+            next(error)
         }
     }
 
@@ -20,7 +20,7 @@ export class ProductController {
 
             res.status(StatusCodes.OK).json(result)
         }catch (error) {
-            next()
+            next(error)
         }
     }
 
@@ -35,7 +35,7 @@ export class ProductController {
             })
 
         }catch (error) {
-            next()
+            next(error)
         }
     }
 
@@ -50,7 +50,7 @@ export class ProductController {
                 data: result
             })
         }catch (error) {
-            next()
+            next(error)
         }
     }
 
@@ -64,7 +64,7 @@ export class ProductController {
                 data: result
             })
         }catch (error) {
-            next()
+            next(error)
         }
     }
 }

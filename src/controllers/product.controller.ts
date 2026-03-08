@@ -5,7 +5,7 @@ export class ProductController {
     //     try {
 
     //     }catch (error) {
-    //         next()
+    //         next(error)
     //     }
     // }
 
@@ -13,7 +13,7 @@ export class ProductController {
     //     try {
 
     //     }catch (error) {
-    //         next()
+    //         next(error)
     //     }
     // }
 
@@ -21,7 +21,7 @@ export class ProductController {
     //     try {
 
     //     }catch (error) {
-    //         next()
+    //         next(error)
     //     }
     // }
 
@@ -29,7 +29,7 @@ export class ProductController {
     //     try {
 
     //     }catch (error) {
-    //         next()
+    //         next(error)
     //     }
     // }
 
@@ -37,7 +37,7 @@ export class ProductController {
     //     try {
 
     //     }catch (error) {
-    //         next()
+    //         next(error)
     //     }
     // }
 }
