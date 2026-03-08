@@ -1,44 +1,44 @@
-import { NextFunction, Request } from 'express';
+// import { NextFunction, Request } from 'express';
 
 export class ProductController {
-    get = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    // get = async(req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-        }catch (error) {
-            next()
-        }
-    }
+    //     }catch (error) {
+    //         next()
+    //     }
+    // }
 
-    getById = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    // getById = async(req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-        }catch (error) {
-            next()
-        }
-    }
+    //     }catch (error) {
+    //         next()
+    //     }
+    // }
 
-    create = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    // create = async(req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-        }catch (error) {
-            next()
-        }
-    }
+    //     }catch (error) {
+    //         next()
+    //     }
+    // }
 
-    update = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    // update = async(req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-        }catch (error) {
-            next()
-        }
-    }
+    //     }catch (error) {
+    //         next()
+    //     }
+    // }
 
-    delete = async(req: Request, res: Response, next: NextFunction) => {
-        try {
+    // delete = async(req: Request, res: Response, next: NextFunction) => {
+    //     try {
 
-        }catch (error) {
-            next()
-        }
-    }
+    //     }catch (error) {
+    //         next()
+    //     }
+    // }
 }
 export default new ProductController()

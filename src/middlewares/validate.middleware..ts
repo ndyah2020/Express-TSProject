@@ -1,42 +1,30 @@
-import { Request, Response, NextFunction } from 'express'
-import {ZodType } from 'zod'
+import { Request, Response, NextFunction } from "express"
+import { AnyZodObject } from "zod"
 
-// Middleware cho từng loại riêng
-const validateBody = (schema: ZodType) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
+
+interface ValidateSchema {
+    body?: AnyZodObject,
+    query?: AnyZodObject,
+    params?: AnyZodObject,
+}
+
+export const validate = (schema: ValidateSchema) => {
+    return async(req: Request, _res: Response, next: NextFunction) => {
         try {
-            req.body = await schema.parseAsync(req.body)
+            if(schema.body) {
+                req.body = await schema.body.parseAsync(req.body)
+            }
+
+            if(schema.query) {
+                req.query = await schema.query.parseAsync(req.query)
+            }
+
+            if(schema.params) {
+                req.params = await schema.params.parseAsync(req.params)
+            }
             next()
-        } catch (error: unknown) {
+        }catch (error) {
             next(error)
         }
     }
-}
-
-const validateQuery = (schema: ZodType) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
-        try {
-            req.query = await schema.parseAsync(req.query)
-            next()
-        } catch (error: unknown) {
-            next(error)
-        }
-    }
-}
-
-const validateParams = (schema: ZodType) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
-        try {
-            req.params = await schema.parseAsync(req.params)
-            next()
-        } catch (error: unknown) {           
-           next(error)
-        }
-    }
-}
-
-export const validateMiddleware = {
-    validateBody,
-    validateQuery,
-    validateParams
 }
