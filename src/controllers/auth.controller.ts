@@ -8,9 +8,9 @@ import { IUserInfor } from "../validations/auth.validation"
 export class AuthController {
     register = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { username, password } = req.body as IUserInfor
+            const { username, name, password } = req.body as IUserInfor
             //phần kiểm tra dữ liệu từ body sẽ được viết validate sau
-            const result = await authService.registerService({username, password})
+            const result = await authService.registerService({username, name, password})
 
             res.status(StatusCodes.OK).json({
                 data: result,

@@ -5,12 +5,11 @@ import ApiError from "../utils/ApiError"
 import bcrypt from "bcryptjs"
 import { jwtProviders } from "../providers/jwtProviders";
 // interface
-import { IUserInfor } from "../validations/auth.validation";
+import { IUserInfor, IUserLogin } from "../validations/auth.validation";
 import { UserPayload, UserResponse } from '../interfaces/auth.interface';
 
 export class UserService {
     registerService = async (userBody: IUserInfor): Promise<UserResponse> => {
-
         const userExits = await User.findOne({username: userBody.username})
         if(userExits) throw new ApiError(StatusCodes.CONFLICT, "This username already in use")
 
@@ -18,17 +17,19 @@ export class UserService {
 
         const newUser  =  await User.create({
             username: userBody.username,
+            name: userBody.name,
             passwordHash: hashedPassword,
             role: 'user'
         })
         // nếu không khai báo IUser trong schema thì chổ này phải return ra newUser.username as string (ép kiểu thành string nếu không sẽ báo lỗi)
         return {
             username: newUser.username,
+            name: newUser.name,
             role: newUser.role
         };
     }
 
-    loginService = async (userBody: IUserInfor) => {
+    loginService = async (userBody: IUserLogin) => {
 
         const user = await User.findOne({username: userBody.username})
         if(!user) throw new ApiError(StatusCodes.UNAUTHORIZED, "Incorrect account or password information")

@@ -5,5 +5,6 @@ export interface UserPayload {
 
 export interface UserResponse {
     username: string,
+    name: string,
     role: string,
 }

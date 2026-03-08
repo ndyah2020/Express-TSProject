@@ -20,4 +20,5 @@ export const updateUserBodySchema = z.object({
     phone: z.string().optional(),
     avatar: z.string().url('Avatar phải là URL hợp lệ').optional()
 })
+
 export type IUpdateUser = z.infer<typeof updateUserBodySchema>
