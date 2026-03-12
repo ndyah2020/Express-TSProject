@@ -1,8 +1,13 @@
-import Router from "express";
-import { authMiddleware } from "../middlewares/auth.middleware";
+import { Router } from "express";
+import ProductController from "../controllers/product.controller";
+import { validateProduct } from "../validations/product.validation";
 
-const router = Router()
+const router = Router();
 
-router.get('/get', authMiddleware.isAuthorized)
+router.get("", ProductController.getAllProducts);
+router.get("/:id", ProductController.getProductById);
+router.post("", validateProduct, ProductController.addProduct);
+router.put("/:id", validateProduct, ProductController.updateProduct);
 
-export default router
+
+export default router;
