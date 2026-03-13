@@ -1,91 +1,89 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import { Request, Response, NextFunction } from "express";
 import ProductService from "../services/product.service";
+import { StatusCodes } from "http-status-codes";
+import ApiResponse from "../utils/ApiReponse";
 
-export class ProductController {
-  getAllProducts = async (_req: Request, res: Response) => {
+class ProductController {
+  // GET /products
+  getAllProducts = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const products = await ProductService.getAllProducts();
-      res.status(StatusCodes.OK).json({
+      new ApiResponse({
+        success: true,
         statusCode: StatusCodes.OK,
-        successes: true,
+        message: "Products retrieved successfully",
         data: products,
-        message: "List of all products",
-      });
+      }).send(res);
     } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        successes: false,
-        data: [],
-        message: "Error fetching products",
-        error,
-      });
+      next(error);
     }
   };
 
-  getProductById = async (req: Request, res: Response) => {
+  // GET /products/:id
+  getProductById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const product = await ProductService.getProductById(req.params.id);
-      if (!product)
-        return res.status(StatusCodes.NOT_FOUND).json({
-          statusCode: StatusCodes.NOT_FOUND,
-          successes: false,
-          data: [],
-          message: "Product not found",
-        });
-      res.status(StatusCodes.OK).json({
+      new ApiResponse({
+        success: true,
         statusCode: StatusCodes.OK,
-        successes: true,
+        message: "Product retrieved successfully",
         data: product,
-        message: "fetch product by id: " + product.id,
-      });
+      }).send(res);
     } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-        successes: false,
-        data: [],
-        message: "Error fetching product",
-        error,
-      });
+      next(error);
     }
   };
 
-  addProduct = async (req: Request, res: Response) => {
+  // POST /products
+  createProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const newProduct = await ProductService.createProduct(req.body);
-      res.status(StatusCodes.CREATED).json({
+      const product = await ProductService.createProduct(req.body);
+      new ApiResponse({
+        success: true,
         statusCode: StatusCodes.CREATED,
-        successes: true,
-        data: newProduct,
-        message: "create a product success",
-      });
+        message: "Product created successfully",
+        data: product,
+      }).send(res);
     } catch (error) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Error creating product", error });
+      next(error);
     }
   };
 
-  updateProduct = async (req: Request, res: Response) => {
+  // PATCH /products/:id
+  updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await ProductService.updateProduct(
+      const product = await ProductService.updateProduct(
         req.params.id,
         req.body,
       );
-      if (!updated)
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({
-            statusCode: StatusCodes.NOT_FOUND,
-            successes: false,
-            data: [],
-            message: "Product not found",
-          });
-      res.status(StatusCodes.OK).json(updated);
+      new ApiResponse({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Product updated successfully",
+        data: product,
+      }).send(res);
     } catch (error) {
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Error updating product", error });
+      next(error);
+    }
+  };
+
+  // GET /products/category/:id
+  getProductsByCategory = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const categoryId = req.params.id;
+      const products = await ProductService.getProductsByCategory(categoryId);
+      new ApiResponse({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Products retrieved by category successfully",
+        data: products,
+      }).send(res);
+    } catch (error) {
+      next(error);
     }
   };
 }
