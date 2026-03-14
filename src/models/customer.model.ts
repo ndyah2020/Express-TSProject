@@ -1,14 +1,18 @@
-import mongoose, { Schema , Document}  from "mongoose"; 
-import { Icustomer } from "../interfaces/customers.interface";
+import { Schema, model } from 'mongoose';
 
-export interface IcustomerDocument extends Icustomer, Document {}
+export interface ICustomer {
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  createdAt: Date;
+}
 
-const customerSchema = new Schema<IcustomerDocument>({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true },
-}, {
-    timestamps: true
-})
-export const Customer =mongoose.model<IcustomerDocument>('Customer', customerSchema);
+const customerSchema = new Schema<ICustomer>({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  address: { type: String, required: true },
+  phone: { type: String, required: true },
+}, { timestamps: true });
+
+export const Customer = model<ICustomer>('Customer', customerSchema);
