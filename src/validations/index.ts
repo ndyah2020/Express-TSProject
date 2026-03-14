@@ -10,6 +10,8 @@ export {
     getUsersQuerySchema,
     updateUserBodySchema
 } from './user.validation'
-
 // Product validations
+export {
+    createOrderSchema,
+} from './order.validation'
 
