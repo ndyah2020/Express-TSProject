@@ -1,10 +1,12 @@
-import mongoose, {Document, Schema} from "mongoose";
+import mongoose, {HydratedDocument, Schema} from "mongoose";
 
 
-export interface ICategory extends Document {
+export interface ICategory{
     category_name: string,
     description: string,
 }
+//không tạo mới nên dùng Type, viết gọn hơn inteface vì dùng được dấu bằng
+export type CategoryDocument = HydratedDocument<ICategory> // chổ này nếu có sài .save(), .populate() thì import qua ví dụ const user: CategoryDocument = awai Category.findByid(id)
 
 const categorySchema = new Schema<ICategory> (
     {
@@ -18,7 +20,7 @@ const categorySchema = new Schema<ICategory> (
         }
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 )
 
