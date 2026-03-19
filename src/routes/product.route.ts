@@ -4,7 +4,7 @@ import {
   idParamsSchema,
   productSchema,
 } from "../validations/product.validation";
-import { validate } from "../middlewares/validate.middleware.";
+import { validate } from "../middlewares/validate.middleware";
 
 const router = Router();
 

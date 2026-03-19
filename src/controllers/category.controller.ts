@@ -6,7 +6,6 @@ export class ProductController {
     get = async (_req: Request, res: Response, next: NextFunction) => {
         try {
             const result = await categoryService.get()
-
             res.status(StatusCodes.OK).json(result)
         }catch (error) {
             next(error)

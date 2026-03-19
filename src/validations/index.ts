@@ -11,7 +11,11 @@ export {
     updateUserBodySchema
 } from './user.validation'
 // Product validations
+
 export {
     createOrderSchema,
+    idParamsSchema,
+    customerOrsellerIdParamsSchema,
+    timeRangeParamsSchema
 } from './order.validation'
 

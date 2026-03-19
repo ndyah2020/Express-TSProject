@@ -1,11 +1,13 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, {HydratedDocument, Schema} from "mongoose";
 
-export interface IOrder extends Document {
+export interface IOrder{
     customerID: number,
     sellerID: number,
     totalCost: number,
     paymentMethod: string,
 }
+
+export type OrderDocument = HydratedDocument<IOrder>
 
 const orderSchema = new Schema<IOrder>(
     {
