@@ -3,76 +3,80 @@ import mongoose from "mongoose";
 import ApiError from "../utils/ApiError";
 import { StatusCodes } from "http-status-codes";
 
-export class ProductService {
+import { toProductRes } from "../mapper/product.mapper";
+import { ProductRes } from "../interfaces/productRes.interface";
 
+export class ProductService {
   // Lấy tất cả product
-  async getAllProducts(): Promise<IProduct[]> {
+  async getAllProducts(): Promise<ProductRes[]> {
     try {
-      return await Product.find().populate("categoryId");
+      const products = await Product.find().populate("categoryId");
+      return products.map(toProductRes);
     } catch (error) {
-      throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to fetch products");
+      throw new ApiError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        "Failed to fetch products",
+      );
     }
   }
 
   // Lấy product theo ID
-  async getProductById(id: string): Promise<IProduct> {
+  async getProductById(id: string): Promise<ProductRes> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid product ID");
     }
+
     const product = await Product.findById(id).populate("categoryId");
+
     if (!product) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
     }
-    return product;
+
+    return toProductRes(product);
   }
 
   // Tạo product
-  async createProduct(data: Partial<IProduct>): Promise<IProduct> {
-
+  async createProduct(data: Partial<IProduct>): Promise<ProductRes> {
     try {
-
       const newProduct = new Product(data);
-
-      return await newProduct.save();
-
+      const saved = await newProduct.save();
+      return toProductRes(saved);
     } catch (error) {
-
       throw new ApiError(StatusCodes.BAD_REQUEST, "Failed to create product");
-
     }
-
   }
 
   // Cập nhật product
-  async updateProduct(id: string, data: Partial<IProduct>): Promise<IProduct> {
-
+  async updateProduct(
+    id: string,
+    data: Partial<IProduct>,
+  ): Promise<ProductRes> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid product ID");
     }
 
-    const updated = await Product.findByIdAndUpdate(
-      id,
-      data,
-      { new: true }
-    );
+    const updated = await Product.findByIdAndUpdate(id, data, {
+      new: true,
+    }).populate("categoryId");
 
     if (!updated) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
     }
 
-    return updated;
+    return toProductRes(updated);
   }
   // Lấy product theo category
-  async getProductsByCategory(categoryId: string): Promise<IProduct[]> {
+  async getProductsByCategory(categoryId: string): Promise<ProductRes[]> {
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid category ID");
     }
-    return await Product.find({
-      categoryId: categoryId
+
+    const products = await Product.find({
+      categoryId: categoryId,
     }).populate("categoryId");
 
+    return products.map(toProductRes);
   }
-
 }
 
 export default new ProductService();

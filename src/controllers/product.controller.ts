@@ -2,12 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import ProductService from "../services/product.service";
 import { StatusCodes } from "http-status-codes";
 import ApiResponse from "../utils/ApiReponse";
+import { ProductRes } from "../interfaces/productRes.interface";
 
 class ProductController {
   // GET /products
   getAllProducts = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const products = await ProductService.getAllProducts();
+      const products: ProductRes[] = await ProductService.getAllProducts();
+
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.OK,
@@ -18,11 +20,12 @@ class ProductController {
       next(error);
     }
   };
-
   // GET /products/:id
   getProductById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const product = await ProductService.getProductById(req.params.id);
+      const product: ProductRes = await ProductService.getProductById(
+        req.params.id,
+      );
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.OK,
@@ -37,7 +40,7 @@ class ProductController {
   // POST /products
   createProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const product = await ProductService.createProduct(req.body);
+      const product: ProductRes = await ProductService.createProduct(req.body);
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.CREATED,
@@ -52,7 +55,7 @@ class ProductController {
   // PATCH /products/:id
   updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const product = await ProductService.updateProduct(
+      const product: ProductRes = await ProductService.updateProduct(
         req.params.id,
         req.body,
       );
@@ -75,7 +78,8 @@ class ProductController {
   ) => {
     try {
       const categoryId = req.params.id;
-      const products = await ProductService.getProductsByCategory(categoryId);
+      const products: ProductRes[] =
+        await ProductService.getProductsByCategory(categoryId);
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.OK,
