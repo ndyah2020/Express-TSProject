@@ -12,7 +12,6 @@ export class CategoryService  {
     
     getById = async(categoryID: string): Promise<ICategory> => {
         const category = await categoryModel.findById(categoryID)
-
         if(!category) throw new ApiError(StatusCodes.NOT_FOUND,  "Category not found")
         return category
     }

@@ -1,4 +1,6 @@
-class ApiResponse<T = any> {
+import { Response } from "express";
+
+class ApiResponse<T = unknown> {
   success: boolean;
   statusCode: number;
   message: string;
@@ -16,8 +18,7 @@ class ApiResponse<T = any> {
     this.data = data as T;
   }
 
-  // helper để trả JSON từ controller
-  send(res: any) {
+  send(res: Response) {
     return res.status(this.statusCode).json({
       success: this.success,
       statusCode: this.statusCode,
