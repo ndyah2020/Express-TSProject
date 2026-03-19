@@ -1,41 +1,62 @@
-import { StatusCodes } from "http-status-codes"
-import categoryModel, { ICategory } from "../models/category.model"
-import ApiError from "../utils/ApiError"
+import { StatusCodes } from "http-status-codes";
+import categoryModel from "../models/category.model";
+import ApiError from "../utils/ApiError";
+import {
+  CreateCategoryReq,
+  UpdateCategoryReq,
+} from "../validations/category.validation";
+import { CategoryRes } from "../interfaces/category.interface";
+import { toCategoryRes } from "../mapper/category.mapper";
 
-export class CategoryService  {
-    get = async (): Promise<ICategory[]> => {
-        const categories = categoryModel.find()
+export class CategoryService {
+  get = async (): Promise<CategoryRes[]> => {
+    const category = await categoryModel.find().lean(); //mặc định là nó sẽ trả về  HydratedDocument<ICategory> nến .lean() để nó thành plain object
+    const categoryRes: CategoryRes[] = category.map((categories) =>
+      toCategoryRes(categories),
+    );
+    return categoryRes;
+  };
 
-        if(!categories) throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Failed to get categories")
-        return categories
-    }
-    
-    getById = async(categoryID: string): Promise<ICategory> => {
-        const category = await categoryModel.findById(categoryID)
-        if(!category) throw new ApiError(StatusCodes.NOT_FOUND,  "Category not found")
-        return category
-    }
-    
-    create = async (category: ICategory): Promise<ICategory> => {
-        const newCategory = await categoryModel.create(category)
-        if (!newCategory) throw new ApiError(StatusCodes.BAD_REQUEST,"Create category failed")
-        
-        return newCategory
-    }
+  getById = async (categoryID: string): Promise<CategoryRes> => {
+    const category = await categoryModel.findById(categoryID).lean();
+    if (!category)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+    return toCategoryRes(category);
+  };
 
-    update = async (categoryID: string, category: Partial<ICategory>): Promise<ICategory> => { //dùng Partial để không bắt buộc phỉa truyền đầy đủ cấc trường trong object
-        const newCategory = await categoryModel.findByIdAndUpdate(categoryID, category, {new: true})
-        
-        if(!newCategory) throw new ApiError(StatusCodes.NOT_FOUND, "Category not found")
-        return newCategory
-    }
+  create = async (category: CreateCategoryReq): Promise<CategoryRes> => {
+    const newCategory = await categoryModel.create(category); //cái này là nó sẽ trả về HydratedDocument<ICategory>
 
-    delete = async (categoryID: string): Promise<ICategory> => {
-        const deletedCategory = await categoryModel.findByIdAndDelete(categoryID)
+    if (!newCategory)
+      throw new ApiError(StatusCodes.BAD_REQUEST, "Create category failed");
 
-        if(!deletedCategory) throw new ApiError(StatusCodes.NOT_FOUND, "Category not found")
-        return deletedCategory
-    }
+    return toCategoryRes(newCategory);
+  };
+
+  update = async (
+    categoryID: string,
+    category: Partial<UpdateCategoryReq>,
+  ): Promise<CategoryRes> => {
+    //dùng Partial để không bắt buộc phỉa truyền đầy đủ cấc trường trong object
+    const newCategory = await categoryModel
+      .findByIdAndUpdate(categoryID, category, { new: true })
+      .lean(); //.lean thì trả về plain object luôn
+    if (!newCategory)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+
+    return toCategoryRes(newCategory);
+  };
+
+  delete = async (categoryID: string): Promise<CategoryRes> => {
+    const deletedCategory = await categoryModel
+      .findByIdAndDelete(categoryID)
+      .lean();
+
+    if (!deletedCategory)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+
+    return toCategoryRes(deletedCategory);
+  };
 }
 
-export default new CategoryService()
+export default new CategoryService();

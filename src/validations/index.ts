@@ -10,6 +10,13 @@ export {
     getUsersQuerySchema,
     updateUserBodySchema
 } from './user.validation'
-
 // Product validations
+
+export {
+    createOrderSchema,
+    idParamsSchema,
+    customerIdParamsSchema,
+    sellerIdParamsSchema,
+    timeRangeParamsSchema
+} from './order.validation'
 

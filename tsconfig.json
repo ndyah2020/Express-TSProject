@@ -1,3 +1,4 @@
+
 {
   "compilerOptions": {
     "outDir": "./dist",                 // Thư mục chứa file JS sau khi build
