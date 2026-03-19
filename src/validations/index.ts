@@ -15,7 +15,8 @@ export {
 export {
     createOrderSchema,
     idParamsSchema,
-    customerOrsellerIdParamsSchema,
+    customerIdParamsSchema,
+    sellerIdParamsSchema,
     timeRangeParamsSchema
 } from './order.validation'
 
