@@ -1,18 +1,10 @@
-export interface Icustomer {
-    name: string,
-    email: string,
-    phone: string,
-    address: string,
-    createdAt: Date,
-    updatedAt: Date,
-}
-export interface IcustomerDocument extends Icustomer, Document {
-    _id: string,
-    name: string,
-    email: string,
-    phone: string,
-    address: string,
-    createdAt: Date,
-    updatedAt: Date,
-
+// src/interfaces/customers.interface.ts
+export interface CustomerRes {
+  id: string;  // từ _id
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
