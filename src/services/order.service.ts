@@ -19,7 +19,7 @@ export class OrderService {
     return toOrderRes(order);
   };
 
-  getByCustomerId = async (customerId: number): Promise<OrderRes[]> => {
+  getByCustomerId = async (customerId: string): Promise<OrderRes[]> => {
     const orders = await orderModel.find({ customerID: customerId });
     if (!orders.length)
       throw new ApiError(
@@ -29,7 +29,7 @@ export class OrderService {
     return orders.map(toOrderRes);
   };
 
-  getBySellerId = async (sellerId: number): Promise<OrderRes[]> => {
+  getBySellerId = async (sellerId: string): Promise<OrderRes[]> => {
     const orders = await orderModel.find({ sellerID: sellerId });
     if (!orders.length)
       throw new ApiError(

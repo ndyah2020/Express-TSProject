@@ -1,8 +1,8 @@
-import mongoose, {HydratedDocument, Schema} from "mongoose";
+import mongoose, { HydratedDocument, Schema, Types } from "mongoose";
 
-export interface IOrder{
-    customerID: number,
-    sellerID: number,
+export interface IOrder {
+    customerID: Types.ObjectId,
+    sellerID: Types.ObjectId,
     totalCost: number,
     paymentMethod: string,
 }
@@ -12,11 +12,11 @@ export type OrderDocument = HydratedDocument<IOrder>
 const orderSchema = new Schema<IOrder>(
     {
         customerID: {   
-            type: Number,
+            type: Schema.Types.ObjectId,
             required: true,
         },          
         sellerID: {
-            type: Number,
+            type: Schema.Types.ObjectId,
             required: true,
         },
         totalCost: {    
