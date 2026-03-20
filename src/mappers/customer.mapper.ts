@@ -1,7 +1,5 @@
-// src/mappers/customer.mapper.ts
-import { ICustomer } from "../models/customer.model";
-import { CustomerRes } from "../interfaces/customers.interface";
 
+import { CustomerRes } from "../interfaces/customers.interface";
 export class CustomerMapper {
   static mapToResponse(customer: any): CustomerRes {
     return {
