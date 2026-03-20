@@ -5,8 +5,8 @@ export interface ICustomer extends Document {
   email: string;
   address: string;
   phone: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const customerSchema = new Schema<ICustomer>({
