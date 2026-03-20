@@ -1,6 +1,6 @@
-// src/interfaces/customers.interface.ts
+
 export interface CustomerRes {
-  id: string;  // từ _id
+  id: string;  
   name: string;
   email: string;
   address: string;

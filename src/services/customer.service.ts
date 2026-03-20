@@ -4,9 +4,8 @@ import { CustomerMapper } from '../mappers/customer.mapper';
 
 export class CustomerService {
   async getCustomers(page: number = 1, limit: number = 10): Promise<CustomerRes[]> {
-    const skip = (page - 1) * limit;
     const customers = await Customer.find()
-      .skip(skip)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 })
       .lean();
