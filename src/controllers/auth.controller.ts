@@ -3,8 +3,6 @@ import { StatusCodes } from "http-status-codes"
 import  authService from "../services/auth.service"
 import { IUserInfor } from "../validations/auth.validation"
 
-
-
 export class AuthController {
     register = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -18,7 +16,6 @@ export class AuthController {
             })
         } catch (error) {next(error)}
     }
-
     login = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {username, password} = req.body as IUserInfor
@@ -32,7 +29,6 @@ export class AuthController {
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 }
             )
-
             res.cookie(
                 'refreshToken', result.refreshToken, {
                     httpOnly: true,
@@ -41,7 +37,6 @@ export class AuthController {
                     maxAge: 30 * 24 * 60 * 60 * 1000
                 }
             )
-
             //maxAge của refresh và access đều phải như nhau vì đó là thời gian sống của cookie nếu nhầm set như acccess token sẽ cookie sẽ bị mất
 
             res.status(StatusCodes.OK).json({
@@ -51,7 +46,6 @@ export class AuthController {
 
         } catch (error) {next(error)}
     }
-
     logout = async (_req: Request, res: Response, next: NextFunction) => {
         try {
             res.clearCookie('accessToken')
@@ -59,7 +53,6 @@ export class AuthController {
             res.status(StatusCodes.OK).json({message: "logged out"})
         }catch(error) {next(error)}
     }
-
     refreshToken = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const refreshTokenFromCookies = req.cookies.refreshToken
@@ -79,7 +72,6 @@ export class AuthController {
         }
     }
 }
-
 export default new AuthController()
 //dùng export ở class dể unitest còn exort new ra UserController thì khi import thì không cần khởi tạo, không được sử dụng biến toàn cục trong class
 //vì khi import với userrController đã được khởi tạo thì biến toàn cục đó không được reset lại
