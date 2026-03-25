@@ -1,19 +1,37 @@
-import { Schema, model, Document } from 'mongoose';
+import mongoose, {HydratedDocument, Schema} from "mongoose";
 
-export interface ICustomer extends Document {
-  name: string;
-  email: string;
-  address: string;
-  phone: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+export interface ICustomer {
+    name: string,
+    email: string,
+    phone: string,
+    address: string,
 }
 
-const customerSchema = new Schema<ICustomer>({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  address: { type: String, required: true },
-  phone: { type: String, required: true },
-}, { timestamps: true });
+export type CustomerDocument = HydratedDocument<ICustomer>
 
-export const Customer = model<ICustomer>('Customer', customerSchema);
+const customerSchema = new Schema<ICustomer> (
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        phone: {
+            type: String,
+            required: true,
+        },
+        address: {
+            type: String,
+            required: true,
+        }
+    },
+    {
+        timestamps: true,
+    }
+)
+
+export default mongoose.model<ICustomer>('Customer', customerSchema)

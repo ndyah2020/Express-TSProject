@@ -12,6 +12,7 @@ export class ProductController {
         }
     }
 
+
     getById = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const categoryId = req.params.id

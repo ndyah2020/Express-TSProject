@@ -1,60 +1,70 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import customerService from "../services/customer.service";
+import { StatusCodes } from "http-status-codes";
 
 export class CustomerController {
-  get = async (req: Request, res: Response, next: NextFunction) => {
+  get = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
-      const result = await customerService.getCustomers(page, limit);
-      res.status(StatusCodes.OK).json(result);
+      const result = await customerService.get()
+      res.status(StatusCodes.OK).json(result)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  };
+  }
 
-  getById = async (req: Request, res: Response, next: NextFunction) => {
+  getById = async(req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      const result = await customerService.getCustomerById(id);
-      res.status(StatusCodes.OK).json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
+      const customerId = req.params.id
+      const result = await customerService.getById(customerId)
 
-  create = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const customerBody = req.body;
-      const result = await customerService.createCustomer(customerBody);
-      res.status(StatusCodes.CREATED).json(result);
+      res.status(StatusCodes.OK).json(result)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  };
+  }
 
-  update = async (req: Request, res: Response, next: NextFunction) => {
+  create = async(req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      const customerBody = req.body;
-      const result = await customerService.updateCustomer(id, customerBody);
-      res.status(StatusCodes.OK).json(result);
-    } catch (error) {
-      next(error);
-    }
-  };
+      const customer = req.body
+      const result = await customerService.create(customer)
 
-  delete = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id } = req.params;
-      const result = await customerService.deleteCustomer(id);
-      res.status(StatusCodes.OK).json(result);
+      res.status(StatusCodes.OK).json({
+        message: "Create customer success",
+        data: result
+      })
     } catch (error) {
-      next(error);
+      next(error)
     }
-  };
+  }
+
+  update = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+      const customerId = req.params.id
+      const customer = req.body
+      const result = await customerService.update(customerId, customer)
+
+      res.status(StatusCodes.OK).json({
+        message: "Update customer success",
+        data: result
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  delete = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+      const customerId = req.params.id
+      const result = await customerService.delete(customerId)
+
+      res.status(StatusCodes.OK).json({
+        message: "Delete customer success",
+        data: result
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
-const customerController = new CustomerController();
-export default customerController;
+export default new CustomerController()

@@ -20,17 +20,38 @@ const generateToken = async (UserPayload : UserPayload , secretKey: string, toke
 }
 
 
-const verifyToken = async <T>(token: string, secretKey: string): Promise<T> => {
-    //vẫn dùng promeise để xử lý callback trả về
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, secretKey, (error, decoded) => {
-            if(error) return reject(error)
-            resolve(decoded as T)
-        })
+// const verifyToken = async <T>(token: string, secretKey: string): Promise<T> => {
+//     //vẫn dùng promeise để xử lý callback trả về
+//     return new Promise((resolve, reject) => {
+//         jwt.verify(token, secretKey, (error, decoded) => {
+//             if(error) return reject(error)
+//             resolve(decoded as T)
+//         })
+//     })
+// }
+// const verifyToken =async <T>(token:string, secretKey:string):Promise<T> =>{
+//     return new Promise((resolve, reject)=>{
+//         jwt.verify(token,secretKey , (error,decoded)=>{
+//             if(error) return reject(error)
+//                 resolve(decoded as T)
+//         })
+//     })
+// }
+const verifyToken =async <T> (token:string, secretKey:string):Promise<T> =>{
+    return new Promise((resolve,reject)=>{
+        jwt.verify(token,secretKey, 
+            (error,decoded)=>{
+                if(error) return reject
+                return (decoded as T)
+            }
+        )
     })
 }
-
-export const jwtProviders = {
-    generateToken,
+// export const jwtProviders = {
+//     generateToken,
+//     verifyToken
+// }
+export const jwtProvides ={
+   generateToken,
     verifyToken
 }

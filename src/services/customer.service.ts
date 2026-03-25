@@ -1,39 +1,61 @@
-import { Customer } from '../models/customer.model';
-import { CustomerRes } from '../interfaces/customers.interface';
-import { toCustomerRes } from '../mapper/customer.mapper';
+import { StatusCodes } from "http-status-codes";
+import customerModel from "../models/customer.model";
+import ApiError from "../utils/ApiError";
+import {
+  CreateCustomerReq,
+  UpdateCustomerReq,
+} from "../validations/customer.validation";
+import { CustomerRes } from "../interfaces/customers.interface";
+import { toCustomerRes } from "../mapper/customer.mapper";
 
 export class CustomerService {
-  getCustomers = async (page: number = 1, limit: number = 10): Promise<CustomerRes[]> => {
-    const customers = await Customer.find()
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ createdAt: -1 })
-      .lean();
-    return customers.map(toCustomerRes);
+  get = async (): Promise<CustomerRes[]> => {
+    const customer = await customerModel.find().lean();
+    const customerRes: CustomerRes[] = customer.map((customers) =>
+      toCustomerRes(customers),
+    );
+    return customerRes;
   };
 
-  getCustomerById = async (id: string): Promise<CustomerRes | null> => {
-    const customer = await Customer.findById(id).lean();
-    return customer ? toCustomerRes(customer) : null;
-  };
-
-  createCustomer = async (customerData: Omit<CustomerRes, 'id' | 'createdAt' | 'updatedAt'>): Promise<CustomerRes> => {
-    const customer = await Customer.create(customerData);
+  getById = async (customerID: string): Promise<CustomerRes> => {
+    const customer = await customerModel.findById(customerID).lean();
+    if (!customer)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Customer not found");
     return toCustomerRes(customer);
   };
 
-  updateCustomer = async (id: string, customerData: Partial<Omit<CustomerRes, 'id' | 'createdAt' | 'updatedAt'>>): Promise<CustomerRes | null> => {
-    const customer = await Customer.findByIdAndUpdate(
-      id,
-      customerData,
-      { new: true, runValidators: true }
-    ).lean();
-    return customer ? toCustomerRes(customer) : null;
+  create = async (customer: CreateCustomerReq): Promise<CustomerRes> => {
+    const newCustomer = await customerModel.create(customer);
+
+    if (!newCustomer)
+      throw new ApiError(StatusCodes.BAD_REQUEST, "Create customer failed");
+
+    return toCustomerRes(newCustomer);
   };
 
-  deleteCustomer = async (id: string): Promise<CustomerRes | null> => {
-    const customer = await Customer.findByIdAndDelete(id).lean();
-    return customer ? toCustomerRes(customer) : null;
+  update = async (
+    customerID: string,
+    customer: Partial<UpdateCustomerReq>,
+  ): Promise<CustomerRes> => {
+    const newCustomer = await customerModel
+      .findByIdAndUpdate(customerID, customer, { new: true })
+      .lean();
+    
+    if (!newCustomer)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Customer not found");
+
+    return toCustomerRes(newCustomer);
+  };
+
+  delete = async (customerID: string): Promise<CustomerRes> => {
+    const deletedCustomer = await customerModel
+      .findByIdAndDelete(customerID)
+      .lean();
+
+    if (!deletedCustomer)
+      throw new ApiError(StatusCodes.NOT_FOUND, "Customer not found");
+
+    return toCustomerRes(deletedCustomer);
   };
 }
 
