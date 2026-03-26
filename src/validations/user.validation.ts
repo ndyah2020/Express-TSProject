@@ -1,11 +1,11 @@
 import z from "zod"
 import { paginationBaseSchema } from "./pagination.validation"
 
-export const userQuerySchema = paginationBaseSchema.extend({
+export const getUserQuerySchema = paginationBaseSchema.extend({
     search: z
     .string()
     .optional()
     .default("")
 })
 
-export type IUserQueryReq = z.infer<typeof userQuerySchema>
+export type GetUserQueryReq = z.infer<typeof getUserQuerySchema>

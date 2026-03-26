@@ -1,20 +1,36 @@
 import { StatusCodes } from "http-status-codes";
-import categoryModel from "../models/category.model";
+import categoryModel, { ICategory } from "../models/category.model";
 import ApiError from "../utils/ApiError";
-import {
-  CreateCategoryReq,
-  UpdateCategoryReq,
-} from "../validations/category.validation";
+import { CreateCategoryReq, GetCategoryQueryReq, UpdateCategoryReq} from "../validations/category.validation";
 import { CategoryRes } from "../interfaces/category.interface";
 import { toCategoryRes } from "../mapper/category.mapper";
+import { FilterQuery } from "mongoose";
+
+
 
 export class CategoryService {
-  get = async (): Promise<CategoryRes[]> => {
-    const category = await categoryModel.find().lean(); //mặc định là nó sẽ trả về  HydratedDocument<ICategory> nến .lean() để nó thành plain object
-    const categoryRes: CategoryRes[] = category.map((categories) =>
+  getQuery = async (query: GetCategoryQueryReq): Promise<CategoryRes[]> => {
+    console.log(query)
+    const page = query.page
+    const limit = query.limit
+    const skip = (page - 1) * limit
+
+    const filter: FilterQuery<ICategory> = {}
+
+    if(query.search) {
+      filter.$or = [
+        {category_name: {$regex: query.search, $options: "i" }},
+        {description: {$regex: query.search, $options: "i"}}
+      ]
+    }
+
+    let categorySort = query.sort
+    categorySort = categorySort.split(',').join(' ')
+
+    const category = await categoryModel.find(filter).sort(categorySort).limit(limit).skip(skip).lean(); //mặc định là nó sẽ trả về  HydratedDocument<ICategory> nến .lean() để nó thành plain object
+    return category.map((categories) =>
       toCategoryRes(categories),
-    );
-    return categoryRes;
+    );;
   };
 
   getById = async (categoryID: string): Promise<CategoryRes> => {

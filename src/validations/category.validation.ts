@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { paginationBaseSchema } from "./pagination.validation"
 
 export const createCategorySchema = z.object({
   category_name: z
@@ -12,11 +13,13 @@ export const createCategorySchema = z.object({
 
 export const updateCategorySchema = createCategorySchema.partial()
 
-export const idParamsSchema = z.object({
-  id: z
-    .string({ message: "Category id is required" })
-    .length(24, { message: "Category id must be a valid ObjectId (24 characters)" })
+export const getCategoryQuerySchema = paginationBaseSchema.extend({
+    search: z
+    .string()
+    .optional()
+    .default("") 
 })
 
 export type CreateCategoryReq = z.infer<typeof createCategorySchema>
 export type UpdateCategoryReq = z.infer<typeof updateCategorySchema>
+export type GetCategoryQueryReq = z.infer<typeof getCategoryQuerySchema>
