@@ -1,24 +1,11 @@
-import { z } from 'zod'
+import z from "zod"
+import { paginationBaseSchema } from "./pagination.validation"
 
-// Schema cho params (MongoDB ObjectId)
-export const userIdParamSchema = z.object({
-    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'User ID không hợp lệ')
+export const userQuerySchema = paginationBaseSchema.extend({
+    search: z
+    .string()
+    .optional()
+    .default("")
 })
 
-// Schema cho query params (pagination, search)
-export const getUsersQuerySchema = z.object({
-    page: z.string().regex(/^\d+$/).transform(Number).default('1'),
-    limit: z.string().regex(/^\d+$/).transform(Number).default('10'),
-    search: z.string().optional()
-})
-export type IGetUsersQuery =z.infer<typeof getUsersQuerySchema>
-
-// Schema riêng cho body
-export const updateUserBodySchema = z.object({
-    name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').optional(),
-    email: z.string().email('Email không hợp lệ').optional(),
-    phone: z.string().optional(),
-    avatar: z.string().url('Avatar phải là URL hợp lệ').optional()
-})
-
-export type IUpdateUser = z.infer<typeof updateUserBodySchema>
+export type IUserQueryReq = z.infer<typeof userQuerySchema>

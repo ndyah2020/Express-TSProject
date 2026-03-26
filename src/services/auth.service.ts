@@ -8,7 +8,7 @@ import { jwtProviders } from "../providers/jwtProviders";
 import { IUserInfor, IUserLogin } from "../validations/auth.validation";
 import { UserPayload, UserResponse } from '../interfaces/auth.interface';
 
-export class UserService {
+export class AuthService {
     registerService = async (userBody: IUserInfor): Promise<UserResponse> => {
         const userExits = await User.findOne({username: userBody.username})
         if(userExits) throw new ApiError(StatusCodes.CONFLICT, "This username already in use")
@@ -82,4 +82,4 @@ export class UserService {
     }
 }
 
-export default new UserService()
+export default new AuthService()
