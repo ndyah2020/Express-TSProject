@@ -2,7 +2,7 @@ import mongoose, { HydratedDocument, Schema } from "mongoose";
 
 export interface ISupplier {
     supplier_name: string,
-    number_phone: string,
+    phone_number: string,
     address: string,
 }
 
@@ -13,7 +13,7 @@ const supplierSchema = new Schema<ISupplier> ({
         type: String,
         required: true,
     },
-    number_phone: {
+    phone_number: {
         type: String,
         required: true
     },
