@@ -65,7 +65,7 @@ export class CategoryService {
 
   delete = async (categoryID: string): Promise<CategoryRes> => {
     const deletedCategory = await categoryModel
-      .findByIdAndDelete(categoryID)
+      .findOneAndDelete({_id: categoryID})
       .lean();
 
     if (!deletedCategory)

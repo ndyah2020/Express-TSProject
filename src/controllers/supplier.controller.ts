@@ -37,6 +37,17 @@ export class SupplierController {
             next(error)
         }
     }
+
+    delete = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const supplierId = req.body.id
+                        
+            const result = await supplierService.delete(supplierId)
+            res.status(StatusCodes.OK).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
 }   
 
 export default new SupplierController()
