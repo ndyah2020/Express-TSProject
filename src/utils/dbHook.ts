@@ -8,11 +8,10 @@ interface PreventDeleteOptions {
     message: string
 }
 
-
 export const preventDeletePlugin = (schema: Schema, options: PreventDeleteOptions) => {
     schema.pre("findOneAndDelete", async function(next) {
-        const doc = await this.model.findOne(this.getQuery())
 
+        const doc = await this.model.findOne(this.getQuery())
         if(!doc) return next()
 
         const refModel = this.model.db.model(options.refModel)
@@ -26,4 +25,3 @@ export const preventDeletePlugin = (schema: Schema, options: PreventDeleteOption
         }
     })
 }
-        

@@ -1,4 +1,5 @@
 import mongoose, { HydratedDocument, Schema } from "mongoose";
+import { preventDeletePlugin } from "../utils/dbHook";
 
 export interface ISupplier {
     supplier_name: string,
@@ -22,5 +23,11 @@ const supplierSchema = new Schema<ISupplier> ({
         required: true
     }
 }, {timestamps: true})
+
+supplierSchema.plugin(preventDeletePlugin, {
+    refModel: "ImportReceipt",
+    foreign_field: "supplierId",
+    message: "This supplier in use, Cann't delete",
+})
 
 export default mongoose.model<ISupplier> ("Supplier", supplierSchema)

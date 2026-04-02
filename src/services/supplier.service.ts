@@ -4,7 +4,7 @@ import { toSupplierRes } from "../mapper/supplier.mapper";
 import supplierModel, { ISupplier } from "../models/supplier.model";
 import ApiError from "../utils/ApiError";
 import { CreateSupplierReq, GetSupplierQueryReq } from "../validations/supplier.validation"
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 
 export class SupplierService {
     getQuery = async(query: GetSupplierQueryReq): Promise<SupplierRes[]> => {
@@ -46,7 +46,6 @@ export class SupplierService {
     }
 
     delete = async(supplierId: string): Promise<SupplierRes> => {
-        const id = supplierId
         const deleteSupplier = await supplierModel.findOneAndDelete({_id: supplierId})
         if(!deleteSupplier) throw new ApiError(StatusCodes.BAD_REQUEST, "Delete failed users")
         return toSupplierRes(deleteSupplier)
