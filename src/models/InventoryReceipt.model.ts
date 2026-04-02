@@ -1,15 +1,15 @@
 import mongoose, {HydratedDocument, Schema, Types} from "mongoose";
 
-export interface IImportReceipt {
+export interface IInventoryReceipt {
     supplierId: Types.ObjectId,
     userId: Types.ObjectId,
     total_mount: number,
     import_date: Date
 }
 
-export type IImportReceiptDocument = HydratedDocument<IImportReceipt>
+export type IInventoryReceiptDocument = HydratedDocument<IInventoryReceipt>
 
-const importReceiptSchema = new Schema<IImportReceipt> ({
+const inventoryReceiptSchema = new Schema<IInventoryReceipt> ({
     supplierId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Suplier",
@@ -31,4 +31,4 @@ const importReceiptSchema = new Schema<IImportReceipt> ({
     }
 }, {timestamps: true})
 
-export default mongoose.model<IImportReceipt>("ImportReceipt", importReceiptSchema)
+export default mongoose.model<IInventoryReceipt>("InventoryReceipt", inventoryReceiptSchema)

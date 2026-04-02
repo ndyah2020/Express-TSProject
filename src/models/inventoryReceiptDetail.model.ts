@@ -1,18 +1,18 @@
 import mongoose, { HydratedDocument, Schema, Types } from "mongoose";
 
-export interface IImportReceiptDetail {
+export interface IInventoryReceiptDetail {
     importReceiptId: Types.ObjectId,
     productId: Types.ObjectId,
     quality: number,
     import_price: number
 }
 
-export type IImportReceiptDetailDocument = HydratedDocument<IImportReceiptDetail>
+export type IInventoryReceiptDetailDocument = HydratedDocument<IInventoryReceiptDetail>
 
-const importReceiptDetailSchema = new Schema<IImportReceiptDetail> ({
+const inventoryReceiptDetailSchema = new Schema<IInventoryReceiptDetail> ({
     importReceiptId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ImportReceipt',
+        ref: 'InventoryReceipt',
         required: true,
     },
     productId: {
@@ -30,4 +30,4 @@ const importReceiptDetailSchema = new Schema<IImportReceiptDetail> ({
     }
 })
 
-export default mongoose.model<IImportReceiptDetail>('ImportReceiptDetail', importReceiptDetailSchema)
+export default mongoose.model<IInventoryReceiptDetail>('InventoryReceiptDetail', inventoryReceiptDetailSchema)
