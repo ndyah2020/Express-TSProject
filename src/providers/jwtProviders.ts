@@ -41,8 +41,8 @@ const verifyToken =async <T> (token:string, secretKey:string):Promise<T> =>{
     return new Promise((resolve,reject)=>{
         jwt.verify(token,secretKey, 
             (error,decoded)=>{
-                if(error) return reject
-                return (decoded as T)
+                if(error) return reject(error)
+                resolve(decoded as T)
             }
         )
     })
@@ -51,7 +51,7 @@ const verifyToken =async <T> (token:string, secretKey:string):Promise<T> =>{
 //     generateToken,
 //     verifyToken
 // }
-export const jwtProvides ={
+export const jwtProviders ={
    generateToken,
     verifyToken
 }

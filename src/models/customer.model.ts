@@ -6,9 +6,7 @@ export interface ICustomer {
     phone: string,
     address: string,
 }
-
 export type CustomerDocument = HydratedDocument<ICustomer>
-
 const customerSchema = new Schema<ICustomer> (
     {
         name: {
@@ -33,5 +31,4 @@ const customerSchema = new Schema<ICustomer> (
         timestamps: true,
     }
 )
-
 export default mongoose.model<ICustomer>('Customer', customerSchema)

@@ -26,7 +26,6 @@ export class CategoryService {
 
   create = async (category: CreateCategoryReq): Promise<CategoryRes> => {
     const newCategory = await categoryModel.create(category); //cái này là nó sẽ trả về HydratedDocument<ICategory>
-
     if (!newCategory)
       throw new ApiError(StatusCodes.BAD_REQUEST, "Create category failed");
 
