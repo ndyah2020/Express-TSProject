@@ -10,4 +10,5 @@ router.use(authMiddleware.isAuthorized);
 router.get("/get", validate({query: getSupplierQuerySchema}), supplierController.getQuery)
 router.post("/create", validate({body: createSupplierSchema}), supplierController.create)
 router.get("/get/:id", supplierController.getById)
+router.get("/delete/:id", supplierController.delete)
 export default router

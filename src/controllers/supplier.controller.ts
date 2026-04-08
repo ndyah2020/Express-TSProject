@@ -32,7 +32,11 @@ export class SupplierController {
         try {
             const supplier = req.body
             const result = await supplierService.create(supplier)
-            res.status(StatusCodes.OK).json(result)
+            res.status(StatusCodes.OK).json({
+                message: "Create supplier successlly",
+                status: StatusCodes.OK,
+                data: result
+            })
         } catch (error) {
             next(error)
         }
@@ -41,7 +45,7 @@ export class SupplierController {
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const supplierId = req.body.id
-                        
+            
             const result = await supplierService.delete(supplierId)
             res.status(StatusCodes.OK).json(result)
         } catch (error) {

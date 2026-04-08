@@ -10,7 +10,6 @@ interface PreventDeleteOptions {
 
 export const preventDeletePlugin = (schema: Schema, options: PreventDeleteOptions) => {
     schema.pre("findOneAndDelete", async function(next) {
-
         const doc = await this.model.findOne(this.getQuery())
         if(!doc) return next()
 

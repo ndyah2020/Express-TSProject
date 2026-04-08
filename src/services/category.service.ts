@@ -6,8 +6,6 @@ import { CategoryRes } from "../interfaces/category.interface";
 import { toCategoryRes } from "../mapper/category.mapper";
 import { FilterQuery } from "mongoose";
 
-
-
 export class CategoryService {
   getQuery = async (query: GetCategoryQueryReq): Promise<CategoryRes[]> => {
     console.log(query)
