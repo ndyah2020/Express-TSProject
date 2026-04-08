@@ -15,7 +15,7 @@ export const createSupplierSchema = z.object({
     address: z.string({message: "Phone number is required"})
 })
 
-export const updateSupplierSchema = createSupplierSchema.partial()
+export const updateSupplierSchema = createSupplierSchema.partial().strict()
 
 export type CreateSupplierReq = z.infer<typeof createSupplierSchema>
 export type UpdateSupplierReq = z.infer<typeof updateSupplierSchema>

@@ -11,7 +11,7 @@ export const createCategorySchema = z.object({
     .optional()
 })
 
-export const updateCategorySchema = createCategorySchema.partial()
+export const updateCategorySchema = createCategorySchema.partial().strict()
 
 export const getCategoryQuerySchema = paginationBaseSchema.extend({
     search: z

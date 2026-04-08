@@ -16,7 +16,6 @@ export class SupplierController {
             next(error)
         }
     }
-
     getById = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const supplierId = req.params.id
@@ -27,7 +26,6 @@ export class SupplierController {
             next(error)
         }
     }
-    
     create = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const supplier = req.body
@@ -41,13 +39,23 @@ export class SupplierController {
             next(error)
         }
     }
-
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
-            const supplierId = req.body.id
-            
+            const supplierId = req.params.id
             const result = await supplierService.delete(supplierId)
-            res.status(StatusCodes.OK).json(result)
+            res.status(StatusCodes.OK).json({messge: "Deleted Supplier", status: StatusCodes.OK, data: result
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+    update = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+            const supplierId = req.params.id
+            const supplierData = req.body
+            const result = await supplierService.update(supplierId, supplierData)
+            res.status(StatusCodes.OK).json({messge: "Updated Supplier", status: StatusCodes.OK, data: result
+            })
         } catch (error) {
             next(error)
         }

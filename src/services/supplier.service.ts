@@ -5,6 +5,7 @@ import supplierModel, { ISupplier } from "../models/supplier.model";
 import ApiError from "../utils/ApiError";
 import { CreateSupplierReq, GetSupplierQueryReq } from "../validations/supplier.validation"
 import { FilterQuery } from 'mongoose';
+import { UpdateCategoryReq } from "../validations/category.validation";
 
 export class SupplierService {
     getQuery = async(query: GetSupplierQueryReq): Promise<SupplierRes[]> => {
@@ -46,11 +47,16 @@ export class SupplierService {
     }
 
     delete = async(supplierId: string): Promise<SupplierRes> => {
-        const deleteSupplier = await supplierModel.findOneAndDelete({_id: supplierId})
-        if(!deleteSupplier) throw new ApiError(StatusCodes.BAD_REQUEST, "Delete failed users")
+        const deleteSupplier = await supplierModel.findOneAndDelete({_id: supplierId}).lean()
+        if(!deleteSupplier) throw new ApiError(StatusCodes.NOT_FOUND, "Supplier not found")
         return toSupplierRes(deleteSupplier)
     }
 
+    update = async(supplierId: string, supplierData: UpdateCategoryReq): Promise<SupplierRes> => {
+        const updateSupplier = await supplierModel.findByIdAndUpdate(supplierId, supplierData, {new: true}).lean()
+        if(!updateSupplier) throw new ApiError(StatusCodes.NOT_FOUND, "Supplier not found")
+        return toSupplierRes(updateSupplier)
+    }
 }
 
 export default new SupplierService()

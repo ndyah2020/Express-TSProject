@@ -33,7 +33,6 @@ router.patch(
 
 router.delete(
   "/delete/:id",
-  validate({ body: updateCategorySchema }),
   categoryController.delete,
 );
 

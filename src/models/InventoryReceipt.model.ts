@@ -12,7 +12,7 @@ export type IInventoryReceiptDocument = HydratedDocument<IInventoryReceipt>
 const inventoryReceiptSchema = new Schema<IInventoryReceipt> ({
     supplierId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Suplier",
+        ref: "Supplier",
         required: true
     },
     userId: {
