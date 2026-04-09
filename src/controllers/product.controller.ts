@@ -9,7 +9,6 @@ class ProductController {
   getAllProducts = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const products: ProductRes[] = await ProductService.getAllProducts();
-
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.OK,

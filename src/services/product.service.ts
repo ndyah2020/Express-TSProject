@@ -10,7 +10,7 @@ export class ProductService {
   // Lấy tất cả product
   async getAllProducts(): Promise<ProductRes[]> {
     try {
-      const products = await Product.find().populate("categoryId");
+      const products = await Product.find().populate("categoryId").lean();
       return products.map(toProductRes);
     } catch (error) {
       throw new ApiError(
@@ -26,7 +26,7 @@ export class ProductService {
       throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid product ID");
     }
 
-    const product = await Product.findById(id).populate("categoryId");
+    const product = await Product.findById(id).populate("categoryId").lean();
 
     if (!product) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
@@ -57,7 +57,7 @@ export class ProductService {
 
     const updated = await Product.findByIdAndUpdate(id, data, {
       new: true,
-    }).populate("categoryId");
+    }).populate("categoryId").lean();
 
     if (!updated) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
