@@ -30,6 +30,7 @@ const verifyToken = async <T>(token: string, secretKey: string): Promise<T> => {
     })
 }
 
+
 export const jwtProviders = {
     generateToken,
     verifyToken

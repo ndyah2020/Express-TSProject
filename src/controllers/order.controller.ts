@@ -24,7 +24,7 @@ export class OrderController {
   
   getByCustomerId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const customerId = Number(req.params.customerId);
+      const customerId = req.params.customerId;
       const result = await orderService.getByCustomerId(customerId);
       res.status(StatusCodes.OK).json(result);
     } catch (error) {
@@ -34,7 +34,7 @@ export class OrderController {
 
   getBySellerId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const sellerId = Number(req.params.sellerId);
+      const sellerId = req.params.sellerId;
       const result = await orderService.getBySellerId(sellerId);
       res.status(StatusCodes.OK).json(result);
     } catch (error) {

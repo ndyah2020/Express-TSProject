@@ -3,12 +3,16 @@ import { z } from "zod";
 // validation: tạo hóa đơn mới
 export const createOrderSchema = z.object({
   customerID: z
-    .number({ message: "Customer ID must be a number" })
-    .int({ message: "Customer ID must be an integer" }),
+    .string({ message: "Customer ID must be a string" })
+    .length(24, {
+      message: "Customer ID must be a valid ObjectId (24 characters)",
+    }),
 
   sellerID: z
-    .number({ message: "Seller ID must be a number" })
-    .int({ message: "Seller ID must be an integer" }),
+    .string({ message: "Seller ID must be a string" })
+    .length(24, {
+      message: "Seller ID must be a valid ObjectId (24 characters)",
+    }),
 
   totalCost: z
     .number({ message: "Total cost must be a number" })
@@ -31,17 +35,19 @@ export const idParamsSchema = z.object({
 // validation: lấy hóa đơn theo id khách hàng
 export const customerIdParamsSchema = z.object({
   customerId: z
-    .coerce.number({ message: "Customer ID must be a number" })
-    .int({ message: "Customer ID must be an integer" })
-    .min(1, { message: "Customer ID must be a positive integer" }),
+    .string({ message: "Customer ID must be a string" })
+    .length(24, {
+      message: "Customer ID must be a valid ObjectId (24 characters)",
+    }),
 });
 
 // validation: lấy hóa đơn theo id người bán
 export const sellerIdParamsSchema = z.object({
   sellerId: z
-    .coerce.number({ message: "Seller ID must be a number" })
-    .int({ message: "Seller ID must be an integer" })
-    .min(1, { message: "Seller ID must be a positive integer" }),
+    .string({ message: "Seller ID must be a string" })
+    .length(24, {
+      message: "Seller ID must be a valid ObjectId (24 characters)",
+    }),
 });
 
 // validation: lấy hóa đơn theo khoảng thời gian

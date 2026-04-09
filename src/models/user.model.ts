@@ -1,11 +1,14 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { HydratedDocument, Schema } from 'mongoose';
 
-export interface IUser extends Document {
+export interface IUser{
     username: string,
     name: string
     passwordHash: string,
     role: string,
+    createAt: Date,
 }
+
+export type IUserDocument = HydratedDocument<IUser>
 
 const userSchema = new Schema<IUser>(
     {
