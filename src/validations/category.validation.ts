@@ -17,7 +17,7 @@ export const getCategoryQuerySchema = paginationBaseSchema.extend({
     search: z
     .string()
     .optional()
-    .default("") 
+    .default("")
 })
 
 export type CreateCategoryReq = z.infer<typeof createCategorySchema>

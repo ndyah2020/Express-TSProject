@@ -6,11 +6,13 @@ import { ZodError } from "zod";
 
 // cái nào bắt buộc phải khai báo mà không dùng thì khai báo có thêm dấu _ nha, do có bật noUnusedLocals trong tsconfig
 export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    const isDev = process.env.NODE_ENV === "development"
     //status code messages và strack mặc định
     let statusCode = StatusCodes.INTERNAL_SERVER_ERROR
     let message = err.message ||"Internal Server Error" 
-    let stack: string | undefined = err.stack
-
+    let stack: string | undefined = isDev ? err.stack : undefined
+    let name = err.name
+    
     // error cho validate
     if (err instanceof ZodError) {
         statusCode = StatusCodes.BAD_REQUEST
@@ -33,6 +35,7 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
     }
     
     const errorResponse = {
+        name: name,
         statusCode: statusCode,
         message: message,
         track: stack
