@@ -5,8 +5,10 @@ import {
   productSchema,
 } from "../validations/product.validation";
 import { validate } from "../middlewares/validate.middleware";
+// import { authMiddleware } from "../middlewares/auth.middleware";
 
 const router = Router();
+// router.use(authMiddleware.isAuthorized);
 
 router.get("", ProductController.getAllProducts);
 router.get(

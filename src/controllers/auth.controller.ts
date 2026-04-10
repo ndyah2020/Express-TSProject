@@ -57,7 +57,6 @@ export class AuthController {
         try {
             const refreshTokenFromCookies = req.cookies.refreshToken
             const accessToken = await authService.refreshTokenService(refreshTokenFromCookies)
-            
             res.cookie(
                 'accessToken', accessToken, {
                     httpOnly: true,

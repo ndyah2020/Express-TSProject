@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from "mongoose";
-
 export interface IProduct extends Document {
   product_name: string;
   price: number;
@@ -8,7 +7,6 @@ export interface IProduct extends Document {
   categoryId: mongoose.Types.ObjectId;
   supplier: string;
 }
-
 const productSchema = new Schema<IProduct>(
   {
     product_name: {
@@ -41,5 +39,4 @@ const productSchema = new Schema<IProduct>(
     timestamps: true,
   },
 );
-
 export default mongoose.model<IProduct>("Product", productSchema);
