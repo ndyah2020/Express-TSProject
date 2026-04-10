@@ -28,6 +28,6 @@ const inventoryReceiptDetailSchema = new Schema<IInventoryReceiptDetail> ({
         type: Number,
         required: true,
     }
-})
+}, {timestamps: true})
 
 export default mongoose.model<IInventoryReceiptDetail>('InventoryReceiptDetail', inventoryReceiptDetailSchema)

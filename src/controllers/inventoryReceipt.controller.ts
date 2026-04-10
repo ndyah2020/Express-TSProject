@@ -1,12 +1,14 @@
 import { Request, NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { CreateInventoryReceiptReq } from '../validations/inventoryReceipt.validation';
+import { CreateInventoryReceiptReq, GetInventoryReceiptQueryReq } from '../validations/inventoryReceipt.validation';
 import  inventoryReceiptService from '../services/inventoryReceipt.service';
 
 export class InventoryController {
-    get = async (_req: Request, res: Response, next: NextFunction) => {
+    get = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            res.status(StatusCodes.OK).json("")
+            const query = req.query as unknown as GetInventoryReceiptQueryReq
+            const result = await inventoryReceiptService.get(query)
+            res.status(StatusCodes.CREATED).json(result)
         } catch (error) {
             next(error)
         }

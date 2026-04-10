@@ -2,6 +2,7 @@ import z from "zod";
 import { paginationBaseSchema } from "./pagination.validation";
 
 
+
 export const createInventoryReceiptSchema = z.object({
     supplierId:z.string({message: "Supplier ID must be string"})
                 .length(24, {message: "Customer ID must be a valid ObjectId (24 characters)"}),
@@ -25,15 +26,11 @@ export const createInventoryReceiptSchema = z.object({
     )
 })
 
-export const getInventoryReceiptSchema = paginationBaseSchema.extend({
-    search: z
-    .string()
-    .optional()
-    .default(""),
-    price: z
-    .number()
-    .optional()
+export const getInventoryReceiptQuerySchema = paginationBaseSchema.extend({
+    minPrice: z.string().transform(val => Number(val)).optional(),
+    maxPrice: z.string().transform(val => Number(val)).optional()
 })
 
 
 export type CreateInventoryReceiptReq = z.infer<typeof createInventoryReceiptSchema>
+export type GetInventoryReceiptQueryReq = z.infer<typeof getInventoryReceiptQuerySchema>

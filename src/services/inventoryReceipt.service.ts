@@ -1,14 +1,40 @@
 // import mongoose from "mongoose"
 import { IInventoryReceiptRes, InventoryReceiptDetailRes, InventoryReceiptRes } from "../interfaces/inventoryReceipt"
-import inventoryReceiptModel from "../models/InventoryReceipt.model"
-import { CreateInventoryReceiptReq } from "../validations/inventoryReceipt.validation"
+import inventoryReceiptModel, { IInventoryReceipt } from "../models/InventoryReceipt.model"
+import { CreateInventoryReceiptReq, GetInventoryReceiptQueryReq } from '../validations/inventoryReceipt.validation';
 import { toInventoryReceipt, toInventoryReceiptDetail } from "../mapper/inventoryReceipt.mapper"
 import inventoryReceiptDetailModel from "../models/inventoryReceiptDetail.model"
 import productModel from "../models/product.model"
 import ApiError from "../utils/ApiError"
 import { StatusCodes } from "http-status-codes"
+import { FilterQuery } from "mongoose";
+
 
 export class InventoryReceiptService {
+
+    get = async(query: GetInventoryReceiptQueryReq): Promise<InventoryReceiptRes[]> => {
+        const page = query.page
+        const limit = query.limit
+        const skip = (page - 1) * limit
+
+        const filter: FilterQuery<IInventoryReceipt> = {}
+
+        if(query.minPrice || query.maxPrice) {
+            filter.total_mount = {}
+
+            if(query.minPrice) filter.total_mount.$gte = query.minPrice
+            if(query.maxPrice) filter.total_mount.$lte = query.maxPrice
+        }
+
+       
+        let receiptSort = query.sort
+        receiptSort = query.sort.split(',').join(' ')
+
+        const inventoryReceipts = await inventoryReceiptModel.find(filter).limit(limit).skip(skip).sort(receiptSort).lean()
+        
+        return inventoryReceipts.map(inventoryReceipt => toInventoryReceipt(inventoryReceipt))
+    }
+
     getById = async(receiptId: string): Promise<InventoryReceiptDetailRes> => {
         const inventoryReceipt = await inventoryReceiptModel.findById(receiptId).populate({
             path: 'details',
@@ -16,7 +42,7 @@ export class InventoryReceiptService {
                 path: 'productId',
                 model: 'Product'
             }
-        }).lean<IInventoryReceiptRes>() 
+        }).lean<IInventoryReceiptRes>()
         if(!inventoryReceipt) throw new ApiError(StatusCodes.NOT_FOUND, "Invenroy receipt does not exist")
 
         return toInventoryReceiptDetail(inventoryReceipt)
