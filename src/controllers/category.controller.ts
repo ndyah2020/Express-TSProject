@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import categoryService from '../services/category.service';
 import { StatusCodes } from 'http-status-codes';
+import { GetCategoryQueryReq } from '../validations/category.validation';
 
 export class ProductController {
-    get = async (_req: Request, res: Response, next: NextFunction) => {
-        try {
-            const result = await categoryService.get()
+    get = async (req: Request, res: Response, next: NextFunction) => {
+        try { 
+            const categoryQuery = req.query as unknown as GetCategoryQueryReq
+            const result = await categoryService.getQuery(categoryQuery)
             res.status(StatusCodes.OK).json(result)
         }catch (error) {
             next(error)

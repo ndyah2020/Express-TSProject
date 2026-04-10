@@ -40,7 +40,7 @@ export class AuthController {
             //maxAge của refresh và access đều phải như nhau vì đó là thời gian sống của cookie nếu nhầm set như acccess token sẽ cookie sẽ bị mất
 
             res.status(StatusCodes.OK).json({
-                data: result.userInfor,
+                data: result,
                 message: "Login successfully"
             })
 
