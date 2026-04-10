@@ -9,4 +9,5 @@ const router = Router()
 router.use(authMiddleware.isAuthorized)
 router.get('/get', validate({query: getUserQuerySchema}) ,userController.getQuery)
 router.get('/get/:id', userController.getById)
+router.delete('/delete/:id', userController.delete)
 export default router;

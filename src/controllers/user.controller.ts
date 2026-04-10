@@ -26,6 +26,17 @@ export class UserController {
             next(error)
         }
     }
+
+    delete = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = req.params.id
+            const userRole = req.userDecoded?.role as string
+            const result = await userService.delete(userId, userRole)
+            res.status(StatusCodes.OK).json(result)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 export default new UserController()

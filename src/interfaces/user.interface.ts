@@ -3,5 +3,5 @@ export interface IUserRes {
     username: string,
     name: string,
     role: string,
-    createAt: Date,
+    createdAt: Date,
 }

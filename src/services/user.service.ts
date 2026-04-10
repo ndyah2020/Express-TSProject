@@ -36,6 +36,15 @@ export class UserService {
         if(!user) throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
         return toUserRes(user)
     }
+
+    delete = async (userId: string, userRole: string): Promise<IUserRes>  => {
+        if(userRole !== "admin") throw new ApiError(StatusCodes.FORBIDDEN, "You do not have permission to access this resource")
+
+        const user = await userModel.findByIdAndDelete(userId).lean()
+        if(!user) throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
+        return toUserRes(user)
+    }
+
 }
 
 export default new UserService()

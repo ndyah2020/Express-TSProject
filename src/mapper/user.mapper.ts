@@ -10,6 +10,6 @@ export const toUserRes = (user: userInput): IUserRes => {
         username: user.username,
         name: user.name,
         role: user.role,
-        createAt: user.createAt
+        createdAt: user.createdAt
     }
 }

@@ -5,7 +5,7 @@ export interface IUser{
     name: string
     passwordHash: string,
     role: string,
-    createAt: Date,
+    createdAt: Date,
 }
 
 export type IUserDocument = HydratedDocument<IUser>
