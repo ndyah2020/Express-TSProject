@@ -26,6 +26,7 @@ export class SupplierController {
             next(error)
         }
     }
+    
     create = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const supplier = req.body
@@ -39,6 +40,7 @@ export class SupplierController {
             next(error)
         }
     }
+    
     delete = async(req: Request, res: Response, next: NextFunction) => {
         try {
             const supplierId = req.params.id

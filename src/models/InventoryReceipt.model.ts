@@ -31,4 +31,13 @@ const inventoryReceiptSchema = new Schema<IInventoryReceipt> ({
     }
 }, {timestamps: true})
 
+inventoryReceiptSchema.virtual('details', {
+    ref: "InventoryReceiptDetail",
+    localField: '_id',
+    foreignField: 'importReceiptId'
+})
+
+inventoryReceiptSchema.set('toObject', { virtuals: true });
+inventoryReceiptSchema.set('toJSON', { virtuals: true });
+
 export default mongoose.model<IInventoryReceipt>("InventoryReceipt", inventoryReceiptSchema)
