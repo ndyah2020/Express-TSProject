@@ -21,6 +21,22 @@ export const createOrderSchema = z.object({
   paymentMethod: z
     .string({ message: "Payment method is required" })
     .min(1, { message: "Payment method cannot be empty" }),
+  details: z.array(z.object({
+    productID: z
+      .string({ message: "Product ID must be a string" })
+      .length(24, {
+        message: "Product ID must be a valid ObjectId (24 characters)",
+      }),
+    quantity: z
+      .number({ message: "Order quantity must be a number" })
+      .positive({ message: "Order quantity must be greater than 0" }),
+    price: z
+      .number({ message: "Price must be a number" })
+      .positive({ message: "Price must be greater than 0" }),
+    totalPrice: z
+      .number({ message: "Total price must be a number" })
+      .positive({ message: "Total price must be greater than 0" }),
+  })),
 });
 
 // validation: lấy hóa đơn theo id hóa đơn
