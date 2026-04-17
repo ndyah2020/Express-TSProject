@@ -1,9 +1,11 @@
 # Tổng Hợp Chi Tiết Các Bài Tập Nâng Cao (Express - TypeScript - Mongoose)
 
-> ⚠️ **Lưu ý quan trọng**: Toàn bộ code trong file này chỉ mang tính tham khảo. 
+> ⚠️ **Lưu ý**: Toàn bộ code trong file này mang tính tham khảo. Quá trình triển khai theo thứ tự: `Validation Interface -> Service -> Controller -> Route`.
+
 ---
-## 1. Bài 1: Tìm Kiếm Nâng Cao, FilterQuery Động & Phân Trang (Advanced Filtering)
-*Tái hiện chính xác phong cách `GetInventoryReceiptQueryReq` và `FilterQuery` của hệ thống.*
+
+## 1. Bài 1: Tìm Kiếm, Lọc Động và Phân Trang (Advanced Filtering)
+Lấy danh sách sản phẩm với các filter động như string, khoảng giá (minPrice, maxPrice) và sắp xếp. Sử dụng interface `FilterQuery` của Mongoose.
 
 ### A. Validation Interface (`src/validations/advanced.validation.ts`)
 ```typescript
@@ -85,8 +87,8 @@ export default new AdvancedController();
 
 ---
 
-## 2. Bài 2: Giao Dịch ACID (Database Transaction)
-*Làm giống logic `create` trong `inventoryReceipt` nhưng được bật Session Transaction để bảo vệ tính vẹn toàn khi trừ kho.*
+## 2. Bài 2: Giao Dịch Cơ Sở Dữ Liệu (Database Transaction)
+Áp dụng Mongoose Session để nhóm các thao tác: tính tổng giá, tạo order, tạo orderDetail và giảm hàng tồn qua `updateOne({ $inc: ... })`. Nếu xảy ra lỗi sẽ bị rollback toàn bộ.
 
 ### A. Service Logic (`src/services/advanced.service.ts`)
 ```typescript
@@ -154,7 +156,9 @@ export default new TransactionService();
 
 ---
 
-## 3. Bài 3: Aggregation Framework (Báo Cáo Doanh Thu Thực Tế)
+## 3. Bài 3: Báo Cáo Doanh Thu (Aggregation)
+Sử dụng Aggregation Framework của Mongoose để thống kê và tính tổng tiền theo từng tháng trong một năm.
+
 ### Service Layer (`src/services/advanced.service.ts`)
 ```typescript
 import orderModel from "../models/order.model";
@@ -191,8 +195,8 @@ export default new ReportService();
 
 ---
 
-## 4. Bài 4 Nông Cao Express: Trích Xuất Dữ kết Báo Cáo CSV (Export Data)
-*Logic này cực kỳ ăn điểm môn hệ thống thông tin. Truy xuất và biến đổi Object JSON thành chuỗi file Text CSV.*
+## 4. Bài 4: Xuất Dữ Liệu (Export To CSV)
+Controller nhận dữ liệu từ mongoose và trả ra một file văn bản định dạng `.csv` dựa vào config headers.
 
 ### A. Controller (`src/controllers/advanced.controller.ts`)
 ```typescript
@@ -205,17 +209,14 @@ export class ExportController {
         try {
             const products = await productModel.find().lean();
             
-            // Báo cho Trình Duyệt đây là File Tải Về
             res.setHeader("Content-Type", "text/csv");
             res.setHeader("Content-Disposition", "attachment; filename=products_report.csv");
 
-            // Xây dựng chuỗi dữ liệu (Header + Rows)
             let csvText = "ProductID,Product_Name,Price,Quantity,Supplier\n";
             products.forEach(p => {
                 csvText += `"${p._id}","${p.product_name}","${p.price}","${p.inventory_quantity}","${p.supplier}"\n`;
             });
 
-            // Gọi send thay vì json()
             res.status(200).send(csvText);
         } catch (error) {
             next(error);
@@ -227,34 +228,32 @@ export default new ExportController();
 
 ---
 
-## 5. Bài 5 Tối Ưu Hệ Thống: Caching Kết Quả Bằng Biến RAM NODE.JS (Memory Cache)
-*Chặn đứng việc CSDL bị sập do có quá nhiều request thống kê báo cáo cùng lúc.*
+## 5. Bài 5: Bộ Nhớ Đệm Ứng Dụng (In-Memory Cache)
+Kỹ thuật cache cơ bản phía server bằng biến toàn cục giúp hạn chế truy vấn aggregate đắt đỏ.
 
 ### Service Layer (`src/services/advanced.service.ts`)
 ```typescript
 import orderDetailModel from "../models/orderDetail.model";
 
 export class CacheStatsService {
-    // Lưu trữ RAM ảo bằng Class Properties
     private cacheStorage: any = {};    
-    private expireLimit: number = 300_000; // Cache cứng 5 phút
+    private expireLimit: number = 300_000;
 
     getTopSellingCached = async () => {
         const now = Date.now();
         
-        // 1. Nếu trên RAM có dữ liệu và chưa hết hạn -> Ăn ngay không tốn CPU
+        // Trả kết quả từ biến nếu thỏa điều kiện bộ nhớ đệm
         if (this.cacheStorage["topSelling"] && this.cacheStorage["topSellingExpiry"] > now) {
             return this.cacheStorage["topSelling"]; 
         }
 
-        // 2. RAM trống hoặc bị mốc -> Bắt buộc Query DB
         const freshData = await orderDetailModel.aggregate([
             { $group: { _id: "$productID", totalSold: { $sum: "$quantity" } } },
             { $sort: { totalSold: -1 } },
             { $limit: 5 }
         ]);
         
-        // 3. Ghi vĩnh viễn vào Memory cho lượt người sau
+        // Cập nhật giá trị biến
         this.cacheStorage["topSelling"] = freshData;
         this.cacheStorage["topSellingExpiry"] = now + this.expireLimit;
 
@@ -266,22 +265,116 @@ export default new CacheStatsService();
 
 ---
 
-## Hướng dẫn khai báo Router & Áp Dụng Middleware
+## 6. Bài 6: Phân Loại Truy Vấn Đa Điều Kiện ($or, $in, $gt)
+Kết hợp nhiều biểu thức logic trong collection search (Tìm kết hợp theo keyword, danh sách category, số lượng dương).
+
+### Service Layer (`src/services/advanced.service.ts`)
+```typescript
+import { FilterQuery } from "mongoose";
+import productModel, { IProduct } from "../models/product.model";
+
+export class SearchComplexService {
+    searchMultiConditions = async (keyword: string, categoryIds: string[]) => {
+        const filter: FilterQuery<IProduct> = {};
+
+        if (keyword) {
+            filter.$or = [
+                { product_name: { $regex: keyword, $options: "i" } },
+                { supplier: { $regex: keyword, $options: "i" } }
+            ];
+        }
+
+        if (categoryIds && categoryIds.length > 0) {
+            filter.categoryId = { $in: categoryIds }; 
+        }
+
+        filter.inventory_quantity = { $gt: 0 };
+
+        const products = await productModel.find(filter)
+                                           .populate("categoryId", "name")
+                                           .sort("-createdAt")
+                                           .lean();
+        return products;
+    }
+}
+export default new SearchComplexService();
+```
+
+---
+
+## 7. Bài 7: Cảnh Báo Sản Phẩm Sắp Phải Bổ Sung Tồn Kho (Low Stock Alert API)
+API query liệt kê các đối tượng dựa trên ngưỡng tồn định sẵn, sử dụng field selection và sort.
+
+### Service Layer
+```typescript
+import productModel from "../models/product.model";
+
+export class StockAlertService {
+    getLowStockAlerts = async (threshold: number = 10) => {
+        const lowStockProducts = await productModel.find({
+            inventory_quantity: { $lte: threshold } 
+        })
+        .select("product_name inventory_quantity supplier") 
+        .sort("inventory_quantity") 
+        .lean();
+
+        return {
+            totalAlerts: lowStockProducts.length,
+            products: lowStockProducts
+        };
+    }
+}
+export default new StockAlertService();
+```
+
+---
+
+## 8. Bài 8: Tổng Quan Thống Kê Nhiều Node Dữ Liệu Đồng Thời (Dashboard Summary)
+Gom tổng doanh thu qua `aggregate` ở root và lấy tổng đếm document. `Promise.all` được sử dụng để tối ưu thời gian thực thi của 3 câu lệnh riêng biệt chạy song song.
+
+### Service Layer
+```typescript
+import orderModel from "../models/order.model";
+import productModel from "../models/product.model";
+import customerModel from "../models/customer.model";
+
+export class DashboardService {
+    getDashboardSummary = async () => {
+        const [totalRevenueResult, totalProducts, totalCustomers] = await Promise.all([
+            orderModel.aggregate([
+                { $group: { _id: null, totalCostSum: { $sum: "$totalCost" }, billCount: { $sum: 1 } } }
+            ]),
+            productModel.countDocuments(),
+            customerModel.countDocuments()
+        ]);
+
+        const orderStats = totalRevenueResult[0] || { totalCostSum: 0, billCount: 0 };
+
+        return {
+            success: true,
+            data: {
+                totalRevenue: orderStats.totalCostSum,
+                totalOrders: orderStats.billCount,
+                totalActiveProducts: totalProducts,
+                totalSystemCustomers: totalCustomers
+            }
+        };
+    }
+}
+export default new DashboardService();
+```
+
+---
+
+## Hướng dẫn khai báo Router
 ```typescript
 import { Router } from "express";
 import advancedController from "../controllers/advanced.controller";
-// Dành cho bài toán Transaction
-// import { isAuthenticated } from "../middlewares/auth.middleware"; 
 
 const router = Router();
 
-// Bài 1: Phân trang tìm kiếm FilterQuery
 router.get("/products/search", advancedController.advancedSearch);
-
-// Bài 2: Giao dịch có session
 // router.post("/orders/transaction", isAuthenticated, advancedController.createComplexOrder);
-
-// Bài 4: Xuất Data trực tiếp
 // router.get("/products/export/csv", advancedController.exportProductsCSV);
 
 export default router;
