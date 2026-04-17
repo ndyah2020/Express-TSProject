@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ProductRes } from "../interfaces/productRes.interface";
+import { ProductMapperInputDocument, ProductRes, ProductRes2 } from "../interfaces/productRes.interface";
 
 type productInput = {
   _id: Types.ObjectId | string;
@@ -36,3 +36,25 @@ export const toProductRes = (doc: productInput): ProductRes => {
     updatedAt: doc.updatedAt,
   };
 };
+
+// type ProductInput = ProductDocument | (IProduct2 & {_id: Types.ObjectId}) 
+
+export const toProduct2 = (doc: ProductMapperInputDocument): ProductRes2 => {
+  return {
+    id: doc._id.toString(),
+    product_name: doc.product_name,
+    price: doc.price,
+    quantity: doc.quantity,
+    inventory_quantity: doc.inventory_quantity,
+    categoryId: {
+      id: doc._id.toString(),
+      category_name: doc.categoryId.category_name,
+      description: doc.categoryId.description
+    },
+    supplier: doc.supplier,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+  }
+}
+
+

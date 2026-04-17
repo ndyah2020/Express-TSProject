@@ -2,6 +2,7 @@ import { Router } from "express";
 import ProductController from "../controllers/product.controller";
 import {
   idParamsSchema,
+  productqueryschema,
   productSchema,
 } from "../validations/product.validation";
 import { validate } from "../middlewares/validate.middleware";
@@ -10,7 +11,7 @@ import { validate } from "../middlewares/validate.middleware";
 const router = Router();
 // router.use(authMiddleware.isAuthorized);
 
-router.get("", ProductController.getAllProducts);
+router.get("", validate({query: productqueryschema}),ProductController.getAllProducts);
 router.get(
   "/:id",
   validate({ params: idParamsSchema }),

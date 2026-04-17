@@ -15,7 +15,7 @@ export class OrderController {
   getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params; 
-      const result = await orderService.getById(id);
+      const result = await orderService.getById222(id);
       res.status(StatusCodes.OK).json(result);
     } catch (error) {
       next(error);
@@ -67,6 +67,15 @@ export class OrderController {
       next(error);
     }
   };
-}
 
+  getQuater = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const year = req.body.year
+      const result = await orderService.getQuarter(year)
+      res.status(StatusCodes.OK).json(result)
+    } catch (error) {
+      next(error)
+    }
+  }
+}
 export default new OrderController();

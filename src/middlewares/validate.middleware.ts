@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ZodTypeAny } from "zod";
+import { ZodSchema } from "zod";
 
 interface ValidateSchema {
-  body?: ZodTypeAny;
-  query?: ZodTypeAny;
-  params?: ZodTypeAny;
+  body?: ZodSchema ;
+  query?: ZodSchema ;
+  params?: ZodSchema ;
 }
 
 export const validate = (schema: ValidateSchema) => {
@@ -27,3 +27,4 @@ export const validate = (schema: ValidateSchema) => {
     }
   };
 };
+

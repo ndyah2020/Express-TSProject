@@ -1,5 +1,5 @@
 import z from "zod";
-import { paginationBaseSchema } from "./pagination.validation";
+import { optionalDateQuery, paginationBaseSchema } from "./queryOptions.validation";
 
 
 
@@ -26,6 +26,11 @@ export const createInventoryReceiptSchema = z.object({
     )
 })
 
+export const getDateInventoryReceiptQuerySchema = z.object({
+    startDate: optionalDateQuery,
+    endDate: optionalDateQuery,
+}).strict("field not valid")
+
 export const getInventoryReceiptQuerySchema = paginationBaseSchema.extend({
     minPrice: z.string().transform(val => Number(val)).optional(),
     maxPrice: z.string().transform(val => Number(val)).optional()
@@ -34,3 +39,4 @@ export const getInventoryReceiptQuerySchema = paginationBaseSchema.extend({
 
 export type CreateInventoryReceiptReq = z.infer<typeof createInventoryReceiptSchema>
 export type GetInventoryReceiptQueryReq = z.infer<typeof getInventoryReceiptQuerySchema>
+export type GetDateInventoryReceiptQueryReq = z.infer<typeof getDateInventoryReceiptQuerySchema>

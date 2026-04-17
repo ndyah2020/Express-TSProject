@@ -1,6 +1,6 @@
 import { Request, NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { CreateInventoryReceiptReq, GetInventoryReceiptQueryReq } from '../validations/inventoryReceipt.validation';
+import { CreateInventoryReceiptReq, GetDateInventoryReceiptQueryReq, GetInventoryReceiptQueryReq } from '../validations/inventoryReceipt.validation';
 import  inventoryReceiptService from '../services/inventoryReceipt.service';
 
 export class InventoryController {
@@ -29,13 +29,33 @@ export class InventoryController {
         }
     }
 
+
     getById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const receiptId = req.params.id
             const result = await inventoryReceiptService.getById(receiptId)
             res.status(StatusCodes.OK).json(result)
-            res.status(StatusCodes.OK).json("")
         } catch (error) {
+            next(error)
+        }
+    }
+
+    getAllDetail = async(_req: Request, res: Response, next: NextFunction) => {
+        try {
+            const result = await inventoryReceiptService.getAllDetail()
+            res.status(StatusCodes.OK).json(result)
+        } catch(error) {
+            next(error)
+        }
+    }
+
+    getDate = async(req: Request, res: Response, next: NextFunction) => {
+        try {
+        
+            const query = req.query as unknown as GetDateInventoryReceiptQueryReq
+            const result = await inventoryReceiptService.getDate(query)
+            res.status(StatusCodes.OK).json(result)
+        } catch(error) {
             next(error)
         }
     }

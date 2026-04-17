@@ -1,5 +1,6 @@
 
 import { z } from "zod";
+import { optionalNumberQuery, paginationBaseSchema } from "./queryOptions.validation";
 
 
 // Schema Product
@@ -20,3 +21,14 @@ export const idParamsSchema = z.object({
     message: "product id must be a valid ObjectId (24 characters)",
   }),
 });
+
+
+export const productqueryschema = paginationBaseSchema.extend({
+  search: z.string().optional().default(""),
+  minPrice: optionalNumberQuery,
+  maxPrice:optionalNumberQuery,
+  minInventory:optionalNumberQuery,
+  maxInventory:optionalNumberQuery,
+}).strict("field not valid")
+
+export type ProductQueryReq = z.infer<typeof productqueryschema>

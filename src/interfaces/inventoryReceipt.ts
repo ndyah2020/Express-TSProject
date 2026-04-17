@@ -1,19 +1,8 @@
 import { Types } from "mongoose";
-import { ProductRes } from "./productRes.interface";
+import { IPopulatedProduct, ProductRes } from "./productRes.interface";
 
 // phần này là kiểu dữ liệu trả vê sau query từ mongooes ra
 // ****
-export interface IPopulatedProduct {
-    _id: Types.ObjectId;
-    product_name: string;
-    price: number;
-    quantity: number;
-    inventory_quantity: number;
-    categoryId: Types.ObjectId;
-    supplier: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
 
 export interface IPopulatedReceiptDetail {
     _id: Types.ObjectId;
@@ -47,6 +36,8 @@ export interface InventoryReceiptRes {
     userId: string,
 }
 
+
+//phần trả về chi tiết
 export interface IInventoryReceiptDetail {
     id: string;
     importReceiptId: string

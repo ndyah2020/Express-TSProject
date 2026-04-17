@@ -13,4 +13,20 @@ class ApiError extends Error {
     
 }
 
+// class APiError2 extends Error {
+//     statuscodes: number
+
+//     constructor(statuscodes: number, message: string ) {
+//         super(message)
+//         this.name = 'ApiError'
+//         this.statuscodes = statuscodes
+//         this.message = message
+
+//         Error.captureStackTrace(this, this.constructor)
+//     }
+
+// }
+
 export default ApiError
+
+

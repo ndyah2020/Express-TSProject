@@ -2,13 +2,16 @@ import { Request, Response, NextFunction } from "express";
 import ProductService from "../services/product.service";
 import { StatusCodes } from "http-status-codes";
 import ApiResponse from "../utils/ApiReponse";
-import { ProductRes } from "../interfaces/productRes.interface";
+import { ProductRes, ProductRes2 } from "../interfaces/productRes.interface";
+import { ProductQueryReq } from "../validations/product.validation";
 
 class ProductController {
   // GET /products
-  getAllProducts = async (_req: Request, res: Response, next: NextFunction) => {
+  getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const products: ProductRes[] = await ProductService.getAllProducts();
+      const query = req.query as unknown as ProductQueryReq
+      const products: ProductRes2[] = await ProductService.getAllProducts(query);
+      
       new ApiResponse({
         success: true,
         statusCode: StatusCodes.OK,
@@ -19,10 +22,25 @@ class ProductController {
       next(error);
     }
   };
+
+  getAllProducts2 = async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const products = await ProductService.getAll2();
+      new ApiResponse({
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: "Products retrieved successfully",
+        data: products,
+      }).send(res);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
   // GET /products/:id
   getProductById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const product: ProductRes = await ProductService.getProductById(
+      const product: ProductRes2 = await ProductService.getProductById(
         req.params.id,
       );
       new ApiResponse({

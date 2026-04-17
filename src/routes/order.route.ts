@@ -46,4 +46,7 @@ router.post(
   orderController.create,
 );
 
+
+router.post("/get-quater", orderController.getQuater)
+
 export default router;

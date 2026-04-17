@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { paginationBaseSchema } from "./pagination.validation"
+import { paginationBaseSchema } from "./queryOptions.validation"
 
 export const createCategorySchema = z.object({
   category_name: z

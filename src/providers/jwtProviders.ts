@@ -1,5 +1,5 @@
 import jwt, { SignOptions } from "jsonwebtoken";
-import { UserPayload } from "../interfaces/auth.interface";
+import { UserPayload } from '../interfaces/auth.interface';
 
 const generateToken = async (
   UserPayload: UserPayload,

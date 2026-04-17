@@ -14,10 +14,12 @@ const orderDetailSchema = new Schema<IOrderDetail>(
     {
         orderID: {
             type: Schema.Types.ObjectId,
+            ref: "Order",
             required: true,
         },
         productID: {
             type: Schema.Types.ObjectId,
+            ref: "Product",
             required: true,
         },
         quantity: {

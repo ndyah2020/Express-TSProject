@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import categoryService from '../services/category.service';
 import { StatusCodes } from 'http-status-codes';
 import { GetCategoryQueryReq } from '../validations/category.validation';
+import { ApiRes } from '../utils/ApiReponse';
+import { CategoryRes } from '../interfaces/category.interface';
 
 export class ProductController {
     get = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,8 +21,7 @@ export class ProductController {
         try {
             const categoryId = req.params.id
             const result = await categoryService.getById(categoryId)
-
-            res.status(StatusCodes.OK).json(result)
+            return ApiRes<CategoryRes>(res, true ,StatusCodes.OK, "OK", result)
         }catch (error) {
             next(error)
         }

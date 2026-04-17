@@ -33,4 +33,17 @@ const orderSchema = new Schema<IOrder>(
     }
 )
 
+orderSchema.virtual('details', {
+    ref: 'OrderDetail',
+    localField: '_id',
+    foreignField: 'orderID'
+})
+
+orderSchema.set('toObject', {virtuals: true})
+orderSchema.set('toJSON', {virtuals: true})
 export default mongoose.model<IOrder>('Order', orderSchema)
+
+
+
+
+

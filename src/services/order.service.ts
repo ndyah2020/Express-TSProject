@@ -4,8 +4,8 @@ import orderDetailModel from "../models/orderDetail.model";
 import productModel from "../models/product.model";
 import ApiError from "../utils/ApiError";
 import { CreateOrderReq } from "../validations/order.validation";
-import { toOrderRes } from "../mapper/order.mapper";
-import { OrderRes } from "../interfaces/order.interface";
+import { toOrderDetailRes, toOrderRes } from "../mapper/order.mapper";
+import { OrderRes, OrderRes2, OrtherDocument } from "../interfaces/order.interface";
 
 export class OrderService {
   get = async (): Promise<OrderRes[]> => {
@@ -15,24 +15,37 @@ export class OrderService {
     return orders.map(toOrderRes);
   };
 
-  getById = async (orderId: string): Promise<OrderRes> => {
-    const order = await orderModel.findById(orderId);
+  // getById = async (orderId: string): Promise<OrderRes> => {
+  //   const order = await orderModel.findById(orderId);
 
-    if (!order) throw new ApiError(StatusCodes.NOT_FOUND, "Order not found");
+  //   if (!order) throw new ApiError(StatusCodes.NOT_FOUND, "Order not found");
 
-    const details = await orderDetailModel.find({
-      $or: [{ orderID: order._id }, { orderID: orderId as any }],
-    });
-    return {
-      ...toOrderRes(order),
-      details: details.map((detail) => ({
-        productID: detail.productID.toString(),
-        quantity: detail.quantity,
-        price: detail.price,
-        totalPrice: detail.totalPrice,
-      })),
-    };
-  };
+  //   const details = await orderDetailModel.find({
+  //     $or: [{ orderID: order._id }, { orderID: orderId as any }],
+  //   });
+  //   return {
+  //     ...toOrderRes(order),
+  //     details: details.map((detail) => ({
+  //       productID: detail.productID.toString(),
+  //       quantity: detail.quantity,
+  //       price: detail.price,
+  //       totalPrice: detail.totalPrice,
+  //     })),
+  //   };
+  // };
+
+  getById222 = async (orderId: string): Promise<OrderRes2> => {
+    const order = await orderModel.findById(orderId).populate({
+      path: 'details',
+      populate: {
+        path: 'productID',
+        model: 'Product'
+      }
+    }).lean<OrtherDocument>()
+    if(!order) throw new ApiError(StatusCodes.NOT_FOUND, "Other ID not found")
+    
+    return toOrderDetailRes(order)
+  }
 
   getByCustomerId = async (customerId: string): Promise<OrderRes[]> => {
     const orders = await orderModel.find({ customerID: customerId });
@@ -255,5 +268,37 @@ export class OrderService {
     // }
     //};
   };
+
+  renderQuaterDate = async(year: number, quater: number) => {
+    const mounths = (quater - 1) * 3
+    return {
+      startDay: new Date(year, mounths, 1),
+      endDay: new Date(year, mounths + 3, 1)
+    } 
+  }
+
+  getQuarter = async (year: number) => {
+    const data = await Promise.all([1,2,3,4].map(async(quater) => {
+      const date = await this.renderQuaterDate(year, quater)
+      const reslut = await orderModel.find({
+        createdAt: {$gte: date.startDay, $lt: date.endDay}
+      }).lean()
+      return {
+        quater: quater,
+        reslut: reslut
+      }
+    }))
+    
+    const result = data.map(quater => {
+      const total = quater.reslut.reduce((acc, product) => acc + product.totalCost, 0)
+      return {
+        quater: quater.quater,
+        total : total
+      }
+    })
+
+    return result
+  }
 }
+
 export default new OrderService();
